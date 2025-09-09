@@ -1,0 +1,38 @@
+#!/usr/bin/env ruby
+
+# Simple stub CLI for elf-lang implementation
+# This will be extended as we implement the lexer, parser, and evaluator
+
+require_relative 'lib/elf_lang'
+
+def main
+  if ARGV.empty?
+    puts "Usage: #{$0} [tokens|ast] <file>"
+    exit 1
+  end
+  
+  command = ARGV[0]
+  
+  case command
+  when 'tokens'
+    if ARGV.length < 2
+      puts "Usage: #{$0} tokens <file>"
+      exit 1
+    end
+    file_path = ARGV[1]
+    ElfLang::CLI.tokens(file_path)
+  when 'ast'
+    if ARGV.length < 2
+      puts "Usage: #{$0} ast <file>"
+      exit 1
+    end
+    file_path = ARGV[1]
+    ElfLang::CLI.ast(file_path)
+  else
+    # Default: run program
+    file_path = command
+    ElfLang::CLI.run(file_path)
+  end
+end
+
+main if __FILE__ == $0

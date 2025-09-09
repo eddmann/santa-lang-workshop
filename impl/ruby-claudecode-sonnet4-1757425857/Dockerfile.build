@@ -1,0 +1,10 @@
+FROM ruby:3.4
+
+# Create non-root user
+RUN useradd -m -s /bin/bash dev
+
+# Set work directory
+WORKDIR /work
+
+# Switch to dev user
+USER dev

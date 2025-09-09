@@ -1,0 +1,14 @@
+ARG BUILDER_IMAGE=local/santa-ruby-claudecode-sonnet4-1757425857:build
+
+FROM $BUILDER_IMAGE
+
+# Copy source files
+COPY --chown=dev:dev . /work/
+
+# Make CLI executable
+USER root
+RUN chmod +x /work/cli
+USER dev
+
+# Set entrypoint to CLI
+ENTRYPOINT ["/work/cli"]
