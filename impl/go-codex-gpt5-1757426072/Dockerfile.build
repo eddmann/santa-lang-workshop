@@ -1,0 +1,15 @@
+FROM golang:1.25-bookworm
+
+# Create non-root user
+RUN useradd -m -u 1000 -s /bin/bash builder || true \
+    && mkdir -p /work \
+    && chown -R 1000:1000 /work
+
+WORKDIR /work
+USER builder
+
+# Default shell
+SHELL ["/bin/bash", "-lc"]
+
+# Ensure Go toolchain is on PATH for all users (do not rely on inherited PATH)
+ENV PATH=/usr/local/go/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin

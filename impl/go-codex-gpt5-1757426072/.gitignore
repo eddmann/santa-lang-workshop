@@ -1,0 +1,24 @@
+# Build artifacts
+bin/
+dist/
+
+# Temporary debugging tests
+tmp/
+
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+*.log
+*.cover
+*.prof
+*.pprof
+
+# Go work/cache
+go.work
+go.work.sum
+**/.DS_Store

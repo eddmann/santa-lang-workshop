@@ -1,0 +1,54 @@
+{
+  "author": "Gopher Hollyberry",
+  "details": {
+    "language": "Go",
+    "model": "GPT-5",
+    "harness": "Codex",
+    "requirements": "Use Go 1.25, without any external packages or dependencies."
+  },
+  "progress": {
+    "stage-1": "complete",
+    "stage-2": "complete",
+    "stage-3": "complete",
+    "stage-4": "complete",
+    "stage-5": "complete"
+  },
+  "journal": [
+    {
+      "written_at": "2025-09-09T14:00:19Z",
+      "entry": "Kickoff: Implementing elf-lang in Go. Focus: Stage 1 lexer + Dockerized CLI. Resume with: make -C ./impl/go-codex-gpt5-1757426072 cli-image"
+    },
+    {
+      "written_at": "2025-09-09T14:04:10Z",
+      "entry": "Developer tooling ready. Built images: make -C ./impl/go-codex-gpt5-1757426072 build-image && cli-image. Verified CLI: make -C ./impl/go-codex-gpt5-1757426072 run ARGS='tokens tests/stage-1/01_basic_tokens.santat' and tests via make test-stage-1 (all passing)."
+    },
+    {
+      "written_at": "2025-09-09T14:17:00Z",
+      "entry": "Stage 2 complete: parser + AST implemented; extended lexer; ast pretty-print fixed. Verified: make test-stage-1, test-stage-2 (all green). Resume: make -C ./impl/go-codex-gpt5-1757426072 test-stage-3"
+    },
+    {
+      "written_at": "2025-09-09T14:17:27Z",
+      "entry": "Starting Stage 3: runtime evaluator. Current status: stage-3 tests all failing (no runtime). Plan: implement value system, environment, eval for literals/vars/lets/arithmetic/puts with exact error strings, then iterate to green. Resume: make -C ./impl/go-codex-gpt5-1757426072 test-stage-3"
+    },
+    {
+      "written_at": "2025-09-09T14:38:24Z",
+      "entry": "Stage 3 complete: added evaluator (literals, lets/mut, assignment, arithmetic, logical ops, string concat/repeat, integer division, built-in puts and operator functions), printing rules, and CLI run wiring. Verified: make test-stage-1, test-stage-2, test-stage-3 all green. Next focus: Stage 4 collections & indexing. Resume with: make -C ./impl/go-codex-gpt5-1757426072 test-stage-4"
+    },
+    {
+      "written_at": "2025-09-09T15:05:45Z",
+      "entry": "Stage 4+5 complete: added List/Set/Dict types, indexing, built-ins (push/assoc/first/rest/size/map/filter/fold), partial application, user functions + closures, composition (>>), threading (|>), structural equality, and stable printing. Fixed lexer/parser for zero-arg lambdas (||) and adjusted error messages. Verified: make test across all stages (57/57)."
+    },
+    {
+      "written_at": "2025-09-09T15:09:03Z",
+      "entry": "Verified Docker images and full test suite (57/57). Updated go.mod to Go 1.25 for consistency. Ready for handoff."
+    },
+    {
+      "written_at": "2025-09-09T15:17:27Z",
+      "entry": "Verified end-to-end: rebuilt images and ran full test suite (57/57 passing). Cleaned up a leftover debug program file (tmp_closures.santa). Ready for handoff; resume with: make -C ./impl/go-codex-gpt5-1757426072 test"
+    },
+    {
+      "written_at": "2025-09-09T15:23:45Z",
+      "entry": "Verified images and tests per TASKS.md; 57/57 passing. No changes required."
+    }
+  ]
+}

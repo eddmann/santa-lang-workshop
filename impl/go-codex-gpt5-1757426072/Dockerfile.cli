@@ -1,0 +1,22 @@
+# Multi-stage build for CLI image
+ARG BUILDER_IMAGE
+FROM ${BUILDER_IMAGE} AS build
+
+WORKDIR /work/impl/go-codex-gpt5-1757426072
+
+# Ensure module files are present before build
+COPY . /work/impl/go-codex-gpt5-1757426072
+
+RUN mkdir -p /work/out && \
+    /usr/local/go/bin/go build -o /work/out/elf ./cmd/elf
+
+FROM debian:bookworm-slim
+
+WORKDIR /work
+COPY --from=build /work/out/elf /usr/local/bin/elf
+
+# Minimal runtime dependencies
+RUN useradd -m -u 1000 runner || true
+USER runner
+
+ENTRYPOINT ["/usr/local/bin/elf"]
