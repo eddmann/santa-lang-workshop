@@ -31,7 +31,7 @@ jobs:
         run: cargo build --release
 
       - name: Generate site
-        run: tools/target/release/santa-site
+        run: tools/target/release/santa-site --base-path /santa-lang-workshop
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

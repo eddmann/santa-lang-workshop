@@ -7,16 +7,44 @@ use std::io::Write;
 use std::path::{Path, PathBuf};
 
 #[derive(Parser)]
-#[command(name = "santa-site", about = "Generate a static website for Santa implementations into docs/")]
+#[command(name = "santa-site", about = "Generate a static website for elf-lang implementations")]
 #[command(version = "0.1.0")]
+#[command(long_about = "Generates a static website showcasing elf-lang implementations. 
+The tool reads implementation directories, processes journal entries, and creates 
+a beautiful website with filtering, code browsing, and responsive design.
+
+The generated site includes:
+- Homepage with implementation showcase and filtering
+- Language reference page from specs/LANG.md
+- Tasks page from specs/TASKS.md  
+- Individual implementation pages with journal entries and code browser
+- Responsive design with dark theme and festive styling
+
+Perfect for GitHub Pages deployment with configurable base paths.")]
 struct Args {
-    /// Output directory for the static site (default: docs/ at repo root)
+    /// Output directory for the generated static site
+    /// 
+    /// Defaults to 'docs/' in the repository root. All HTML files, assets, and 
+    /// subdirectories will be created here. This directory can be deployed 
+    /// directly to any static hosting service.
     #[arg(long)]
     out_dir: Option<PathBuf>,
 
-    /// Implementation root directory (default: impl/ at repo root)
+    /// Directory containing elf-lang implementations
+    /// 
+    /// Each subdirectory should contain a JOURNAL file with implementation 
+    /// metadata and progress. Defaults to 'impl/' in the repository root.
     #[arg(long)]
     impl_dir: Option<PathBuf>,
+
+    /// Base URL path for hosting under a subdirectory
+    /// 
+    /// Use this when deploying to GitHub Pages under a project repository 
+    /// (e.g., '/santa-lang-workshop'). Leave empty for user/organization 
+    /// sites (*.github.io). All internal links and assets will be prefixed 
+    /// with this path.
+    #[arg(long)]
+    base_path: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -168,12 +196,26 @@ fn tailwind_head() -> String {
         .to_string()
 }
 
-fn layout_with_base(title: &str, body: &str, base_prefix: &str) -> String {
-    let _bp = base_prefix; // kept for future relative modes; currently use absolute paths
-    let logo_src = "/logo-light.png".to_string();
-    let home_href = "/".to_string();
-    let lang_href = "/language/".to_string();
-    let tasks_href = "/tasks/".to_string();
+fn normalize_base_path(input: &str) -> String {
+    let trimmed = input.trim();
+    if trimmed.is_empty() || trimmed == "/" { return String::new(); }
+    let mut s = trimmed.to_string();
+    if !s.starts_with('/') { s.insert(0, '/'); }
+    while s.ends_with('/') { s.pop(); }
+    s
+}
+
+fn base_url(base: &str, path: &str) -> String {
+    let base_norm = normalize_base_path(base);
+    let p = if path.starts_with('/') { &path[1..] } else { path };
+    if base_norm.is_empty() { format!("/{}", p) } else { format!("{}/{}", base_norm, p) }
+}
+
+fn layout_with_base(title: &str, body: &str, base_path: &str) -> String {
+    let logo_src = base_url(base_path, "logo-light.png");
+    let home_href = if normalize_base_path(base_path).is_empty() { "/".to_string() } else { format!("{}/", normalize_base_path(base_path)) };
+    let lang_href = format!("{}/", base_url(base_path, "language"));
+    let tasks_href = format!("{}/", base_url(base_path, "tasks"));
     format!(
         r#"<!doctype html>
 <html lang="en" class="h-full">
@@ -238,16 +280,15 @@ fn layout_with_base(title: &str, body: &str, base_prefix: &str) -> String {
     )
 }
 
-fn layout(title: &str, body: &str) -> String {
-    layout_with_base(title, body, "")
+fn layout(title: &str, body: &str, base_path: &str) -> String {
+    layout_with_base(title, body, base_path)
 }
 
-fn layout_impl(title: &str, body: &str) -> String {
-    // Impl pages live under impl/<dir>/ so need ../ for assets/links
-    layout_with_base(title, body, "../")
+fn layout_impl(title: &str, body: &str, base_path: &str) -> String {
+    layout_with_base(title, body, base_path)
 }
 
-fn render_language_page(root: &Path) -> String {
+fn render_language_page(root: &Path, base_path: &str) -> String {
     let lang_path = root.join("specs").join("LANG.md");
     let (html, toc) = if let Ok(md) = fs::read_to_string(&lang_path) {
         let mut opts = MdOptions::empty();
@@ -332,10 +373,10 @@ fn render_language_page(root: &Path) -> String {
         toc,
         html
     );
-    layout("elf-lang Language Reference", &body)
+    layout("elf-lang Language Reference", &body, base_path)
 }
 
-fn render_tasks_page(root: &Path) -> String {
+fn render_tasks_page(root: &Path, base_path: &str) -> String {
     let tasks_path = root.join("specs").join("TASKS.md");
     fn escape_placeholders_outside_code(src: &str) -> String {
         let placeholder_re = regex::Regex::new(r"(?i)<([a-z0-9_-]+)>").unwrap();
@@ -457,7 +498,7 @@ fn render_tasks_page(root: &Path) -> String {
         toc,
         html
     );
-    layout("elf-lang Tasks", &body)
+    layout("elf-lang Tasks", &body, base_path)
 }
 
 fn read_readme_intro(_root: &Path) -> String {
@@ -471,7 +512,7 @@ Below, you’ll find their handiwork on display, each accompanied by a journal w
     parts.join("\n")
 }
 
-fn render_index(impls: &[ImplInfo], intro_html: &str) -> String {
+fn render_index(impls: &[ImplInfo], intro_html: &str, base_path: &str) -> String {
     let mut cards = String::new();
     let mut langs: BTreeSet<String> = BTreeSet::new();
     let mut harnesses: BTreeSet<String> = BTreeSet::new();
@@ -479,7 +520,7 @@ fn render_index(impls: &[ImplInfo], intro_html: &str) -> String {
     for ii in impls {
         let img_src = match &ii.elf_png_path {
             Some(_) => format!("impl/{}/elf.png", ii.dir_name),
-            None => "/unknown-elf.png".to_string(),
+            None => base_url(base_path, "unknown-elf.png"),
         };
         let author = if ii.journal.author.trim().is_empty() { "Unknown Elf".to_string() } else { ii.journal.author.clone() };
         let _progress = &ii.journal.progress;
@@ -620,10 +661,10 @@ fn render_index(impls: &[ImplInfo], intro_html: &str) -> String {
         cards,
         filters = filters
     );
-    layout("santa-lang Workshop", &body)
+    layout("santa-lang Workshop", &body, base_path)
 }
 
-fn render_impl(imp: &ImplInfo, tree: &BTreeMap<String, String>) -> String {
+fn render_impl(imp: &ImplInfo, tree: &BTreeMap<String, String>, base_path: &str) -> String {
     let author = if imp.journal.author.trim().is_empty() { "Unknown Elf" } else { &imp.journal.author };
     let mut entries = imp.journal.journal.clone();
     entries.sort_by(|a, b| b.written_at.cmp(&a.written_at));
@@ -778,7 +819,7 @@ fn render_impl(imp: &ImplInfo, tree: &BTreeMap<String, String>) -> String {
         imp.dir_name
     );
 
-    let header_img_src = if imp.elf_png_path.is_some() { "elf.png".to_string() } else { "/unknown-elf.png".to_string() };
+    let header_img_src = if imp.elf_png_path.is_some() { "elf.png".to_string() } else { base_url(base_path, "unknown-elf.png") };
 
     let header = format!(
         r#"<div class="flex items-center gap-5">
@@ -803,7 +844,7 @@ fn render_impl(imp: &ImplInfo, tree: &BTreeMap<String, String>) -> String {
         img = header_img_src
     );
 
-    layout_impl(&format!("{} – {}", imp.journal.details.language, author), &format!("{}{}", header, tabs))
+    layout_impl(&format!("{} – {}", imp.journal.details.language, author), &format!("{}{}", header, tabs), base_path)
 }
 
 fn collect_code_tree(root: &Path, exclude_dirs: &[&str]) -> Result<BTreeMap<String, String>, String> {
@@ -865,23 +906,24 @@ fn main() -> Result<(), String> {
     let root = repo_root();
     let impl_dir = args.impl_dir.unwrap_or(root.join("impl"));
     let out_dir = args.out_dir.unwrap_or(root.join("docs"));
+    let base_path = args.base_path.unwrap_or_default();
 
     let impls = read_impls(&impl_dir)?;
     ensure_dir(&out_dir)?;
 
     // index.html
     let intro = read_readme_intro(&root);
-    let index_html = render_index(&impls, &intro);
+    let index_html = render_index(&impls, &intro, &base_path);
     write_file(&out_dir.join("index.html"), &index_html)?;
 
     // language page
-    let lang_html = render_language_page(&root);
+    let lang_html = render_language_page(&root, &base_path);
     let lang_dir = out_dir.join("language");
     ensure_dir(&lang_dir)?;
     write_file(&lang_dir.join("index.html"), &lang_html)?;
 
     // tasks page
-    let tasks_html = render_tasks_page(&root);
+    let tasks_html = render_tasks_page(&root, &base_path);
     let tasks_dir = out_dir.join("tasks");
     ensure_dir(&tasks_dir)?;
     write_file(&tasks_dir.join("index.html"), &tasks_html)?;
@@ -889,7 +931,7 @@ fn main() -> Result<(), String> {
     // per-impl pages and code assets
     for ii in &impls {
         let code_tree = collect_code_tree(&ii.abs_path, &["target", "__pycache__", "node_modules", "venv", "env", "build", "dist"])?;
-        let html = render_impl(ii, &code_tree);
+        let html = render_impl(ii, &code_tree, &base_path);
         let impl_dir_out = out_dir.join("impl").join(&ii.dir_name);
         ensure_dir(&impl_dir_out)?;
         write_file(&impl_dir_out.join("index.html"), &html)?;
