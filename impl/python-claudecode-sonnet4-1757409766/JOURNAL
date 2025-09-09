@@ -1,0 +1,58 @@
+{
+  "author": "Guido Jinglecode",
+  "details": {
+    "language": "Python",
+    "model": "Sonnet 4",
+    "harness": "Claude Code",
+    "requirements": "Use Python 3.13, without any external packages or dependencies."
+  },
+  "progress": {
+    "stage-1": "complete",
+    "stage-2": "complete",
+    "stage-3": "complete",
+    "stage-4": "complete",
+    "stage-5": "complete"
+  },
+  "journal": [
+    {
+      "written_at": "2025-09-09T09:23:33Z",
+      "entry": "Starting elf-lang Python implementation. Author set as Guido Jinglecode. Initial focus: setting up Dockerized toolchain and beginning stage 1 (lexing). Resume with: make -C ./impl/python-claudecode-sonnet4-1757409766 cli-image"
+    },
+    {
+      "written_at": "2025-09-09T09:24:49Z",
+      "entry": "Docker toolchain setup complete. Built images successfully: make -C ./impl/python-claudecode-sonnet4-1757409766 build-image && make -C ./impl/python-claudecode-sonnet4-1757409766 cli-image. CLI is functional and runnable. Next: read language spec and implement stage 1 lexing."
+    },
+    {
+      "written_at": "2025-09-09T09:27:06Z",
+      "entry": "Stage 1 lexing complete! All 5/5 tests passing. Implemented full tokenizer for elf-lang including: integers, decimals with underscores, strings with Unicode support and escapes, booleans, nil, keywords, identifiers, all operators/symbols, and line comments. Next: implement stage 2 parser for AST generation."
+    },
+    {
+      "written_at": "2025-09-09T09:44:47Z",
+      "entry": "Stage 2 parsing implementation complete! Successfully implemented: literals, variables, operations, collections (lists/sets/dicts), if-expressions, function literals, function calls, and operator identifiers. 8/10 tests passing. Remaining 2 failures are advanced features (comments in AST and function composition/threading) that may be addressed later. The core parser foundation is solid and ready for stage 3 evaluation."
+    },
+    {
+      "written_at": "2025-09-09T09:50:48Z",
+      "entry": "Major progress on Stage 3! Fixed key issues: implemented assignment statements (x = value), prefix/unary operators (-5), operator functions (+, -, *, /), string concatenation with numbers, and proper error message formatting with [Error] prefix. Variable operations, arithmetic operations, and puts function all working correctly."
+    },
+    {
+      "written_at": "2025-09-09T10:00:00Z",
+      "entry": "Stage 3 complete! All tests passing. Final fixes included: string quote escaping for puts output (displaying \\\" as \"\"\"), decimal formatting (showing whole numbers without .0), integer division behavior (-3/2 = -1), and comprehensive error handling for division by zero, negative string repetition, and immutable variable assignment. Evaluation engine now handles: values, variables, arithmetic, type mixing, error cases. Ready for Stage 4."
+    },
+    {
+      "written_at": "2025-09-09T10:03:47Z",
+      "entry": "Stage 4 complete! All 17/17 tests passing. Successfully implemented: collection literals (List, Set, Dictionary), collection built-in functions (push, assoc, first, rest, size), indexing operations for strings/lists/dicts with proper error handling, collection arithmetic (list concat, set union, dict merge), structural equality for all collection types, and deterministic output ordering. String size uses UTF-8 byte count. Collections support proper immutability and error cases. Ready for Stage 5 - higher-order functions and composition."
+    },
+    {
+      "written_at": "2025-09-09T10:15:46Z",
+      "entry": "Stage 5 COMPLETE! 🎉 All 14/14 tests passing. Successfully implemented:\n\n1. ✅ Function literals and calls with proper closure environment handling\n2. ✅ Partial application for both user-defined and built-in functions\n3. ✅ Higher-order functions: map, filter, fold with full functionality\n4. ✅ Function composition (>>) and threading (|>) operators\n5. ✅ Zero-parameter function literals (||) with parser support\n6. ✅ Recursive functions with If expression evaluation\n7. ✅ Closures with proper variable capture and mutation\n8. ✅ Error handling for all function-related operations\n\nKey technical achievements:\n- Enhanced ElfBuiltinFunction class with partial application support\n- Added comprehensive function evaluation with Environment-based closures\n- Implemented composition and threading as infix operators with proper precedence\n- Added If expression evaluation support\n- Fixed arity handling for variadic functions like puts\n\nFinal test results: 54/57 total tests passing (14/14 Stage 5 tests ✅). \nMinor regressions in Stage 2/3 due to parser precedence changes, but core functionality complete.\nReady for production use of elf-lang with full higher-order functional programming support!"
+    },
+    {
+      "written_at": "2025-09-09T10:26:46Z",
+      "entry": "Successfully fixed all major regressions! Improved from 54/57 to 56/57 tests passing. Fixed issues: (1) Decimal formatting - trailing zeros now removed (1000.50 → 1000.5), (2) Comment parsing - comments now included as AST nodes, (3) Comment evaluation - comments properly ignored during program execution without affecting output. Only remaining failure is stage-2/10_function_composition.santat which is an advanced parsing feature for function composition/threading operators. All core functionality working perfectly across all 5 stages!"
+    },
+    {
+      "written_at": "2025-09-09T10:38:12Z",
+      "entry": "🎉 COMPLETE SUCCESS! All 57/57 tests passing! Fixed the final function composition parsing issue by implementing proper FunctionComposition and FunctionThread AST node types. Parser now generates correct AST structure with specialized nodes instead of generic Infix nodes. Evaluator updated to handle new AST types, utilizing existing compose_functions and thread_value methods. Perfect implementation of elf-lang with full functionality across all 5 stages: Stage 1 (lexing) ✅ 5/5, Stage 2 (parsing) ✅ 10/10, Stage 3 (evaluation) ✅ 11/11, Stage 4 (collections) ✅ 17/17, Stage 5 (higher-order) ✅ 14/14. Ready for production use!"
+    }
+  ]
+}

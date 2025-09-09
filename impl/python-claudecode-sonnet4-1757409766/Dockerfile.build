@@ -1,0 +1,19 @@
+FROM python:3.13-slim
+
+# Create a non-root user
+RUN useradd -m -u 1000 dev
+
+# Set up the working directory
+WORKDIR /work
+
+# Switch to non-root user
+USER dev
+
+# Install development tools if needed (none required per spec - no external dependencies)
+# Everything we need is in Python 3.13 stdlib
+
+# Set Python unbuffered to ensure output appears in real time
+ENV PYTHONUNBUFFERED=1
+
+# Default command for development
+CMD ["/bin/bash"]

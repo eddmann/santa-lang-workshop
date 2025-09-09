@@ -1,0 +1,83 @@
+#!/usr/bin/env python3
+"""
+Elf-lang CLI entrypoint for the santa-lang-workshop.
+Usage:
+  <bin> <file>         - Run the program
+  <bin> ast <file>     - Print AST as JSON
+  <bin> tokens <file>  - Print tokens as JSON Lines
+"""
+
+import sys
+import os
+from lexer import tokenize_to_json_lines
+from parser import parse_to_json
+from evaluator import evaluate_program
+
+
+def main():
+    if len(sys.argv) < 2:
+        print("Usage: cli <command> [args...]", file=sys.stderr)
+        sys.exit(1)
+    
+    command = sys.argv[1]
+    
+    if command == "tokens":
+        if len(sys.argv) != 3:
+            print("Usage: cli tokens <file>", file=sys.stderr)
+            sys.exit(1)
+        
+        filename = sys.argv[2]
+        try:
+            with open(filename, 'r', encoding='utf-8') as f:
+                source = f.read()
+            
+            result = tokenize_to_json_lines(source)
+            print(result)
+        except FileNotFoundError:
+            print(f"File not found: {filename}", file=sys.stderr)
+            sys.exit(1)
+        except Exception as e:
+            print(f"Error: {e}", file=sys.stderr)
+            sys.exit(1)
+            
+    elif command == "ast":
+        if len(sys.argv) != 3:
+            print("Usage: cli ast <file>", file=sys.stderr)
+            sys.exit(1)
+        
+        filename = sys.argv[2]
+        try:
+            with open(filename, 'r', encoding='utf-8') as f:
+                source = f.read()
+            
+            result = parse_to_json(source)
+            print(result)
+        except FileNotFoundError:
+            print(f"File not found: {filename}", file=sys.stderr)
+            sys.exit(1)
+        except Exception as e:
+            print(f"Error: {e}", file=sys.stderr)
+            sys.exit(1)
+    else:
+        # Assume it's a file to run
+        if len(sys.argv) != 2:
+            print("Usage: cli <file>", file=sys.stderr)
+            sys.exit(1)
+        
+        filename = sys.argv[1]
+        try:
+            with open(filename, 'r', encoding='utf-8') as f:
+                source = f.read()
+            
+            result = evaluate_program(source)
+            print(result, end='')  # Don't add extra newline
+        except FileNotFoundError:
+            print(f"File not found: {filename}", file=sys.stderr)
+            sys.exit(1)
+        except Exception as e:
+            print(f"Error: {e}", file=sys.stderr)
+            sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
