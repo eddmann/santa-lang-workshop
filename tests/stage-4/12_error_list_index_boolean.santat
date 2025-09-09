@@ -1,0 +1,7 @@
+--TEST--
+evaluator: error_list_index_boolean
+--FILE--
+let list = [1,2,3];
+list[true];
+--EXPECT--
+[Error] Unable to perform index operation, found: List[Boolean]

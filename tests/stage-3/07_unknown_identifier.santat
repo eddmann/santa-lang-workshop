@@ -1,0 +1,6 @@
+--TEST--
+evaluator: unknown_identifier
+--FILE--
+undefined_identifier();
+--EXPECT--
+[Error] Identifier can not be found: undefined_identifier

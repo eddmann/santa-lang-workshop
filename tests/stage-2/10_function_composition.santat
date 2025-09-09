@@ -1,0 +1,147 @@
+--TEST--
+parser: function_composition
+--FILE--
+let inc_double = inc >> double;
+[1, 2, 3, 4, 5] |> map(|x| x + 1) |> filter(|x| x > 2) |> inc_double;
+--EXPECT_AST--
+{
+  "statements": [
+    {
+      "type": "Expression",
+      "value": {
+        "name": {
+          "name": "inc_double",
+          "type": "Identifier"
+        },
+        "type": "Let",
+        "value": {
+          "functions": [
+            {
+              "name": "inc",
+              "type": "Identifier"
+            },
+            {
+              "name": "double",
+              "type": "Identifier"
+            }
+          ],
+          "type": "FunctionComposition"
+        }
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "functions": [
+          {
+            "arguments": [
+              {
+                "body": {
+                  "statements": [
+                    {
+                      "type": "Expression",
+                      "value": {
+                        "left": {
+                          "name": "x",
+                          "type": "Identifier"
+                        },
+                        "operator": "+",
+                        "right": {
+                          "type": "Integer",
+                          "value": "1"
+                        },
+                        "type": "Infix"
+                      }
+                    }
+                  ],
+                  "type": "Block"
+                },
+                "parameters": [
+                  {
+                    "name": "x",
+                    "type": "Identifier"
+                  }
+                ],
+                "type": "Function"
+              }
+            ],
+            "function": {
+              "name": "map",
+              "type": "Identifier"
+            },
+            "type": "Call"
+          },
+          {
+            "arguments": [
+              {
+                "body": {
+                  "statements": [
+                    {
+                      "type": "Expression",
+                      "value": {
+                        "left": {
+                          "name": "x",
+                          "type": "Identifier"
+                        },
+                        "operator": ">",
+                        "right": {
+                          "type": "Integer",
+                          "value": "2"
+                        },
+                        "type": "Infix"
+                      }
+                    }
+                  ],
+                  "type": "Block"
+                },
+                "parameters": [
+                  {
+                    "name": "x",
+                    "type": "Identifier"
+                  }
+                ],
+                "type": "Function"
+              }
+            ],
+            "function": {
+              "name": "filter",
+              "type": "Identifier"
+            },
+            "type": "Call"
+          },
+          {
+            "name": "inc_double",
+            "type": "Identifier"
+          }
+        ],
+        "initial": {
+          "items": [
+            {
+              "type": "Integer",
+              "value": "1"
+            },
+            {
+              "type": "Integer",
+              "value": "2"
+            },
+            {
+              "type": "Integer",
+              "value": "3"
+            },
+            {
+              "type": "Integer",
+              "value": "4"
+            },
+            {
+              "type": "Integer",
+              "value": "5"
+            }
+          ],
+          "type": "List"
+        },
+        "type": "FunctionThread"
+      }
+    }
+  ],
+  "type": "Program"
+}

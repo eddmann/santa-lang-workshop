@@ -1,0 +1,20 @@
+--TEST--
+evaluator: function_composition
+--FILE--
+let inc_double = +(1) >> *(2);
+puts(inc_double(2));
+let inc_double_2 = (|a| a + 1) >> (|a| a * 2);
+puts(inc_double_2(2));
+let double_size = map(+(1)) >> filter(|a| a != 2);
+puts(double_size([1, 2, 3]))
+let inc = |x| x + 1;
+let square = |x| x * x;
+let inc_then_square = inc >> square;
+let nums = [1,2,3,4,5];
+puts(nums |> map(inc_then_square) |> filter(|x| x > 10));
+--EXPECT--
+6 
+6 
+[3, 4] 
+[16, 25, 36] 
+nil

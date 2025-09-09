@@ -1,0 +1,26 @@
+--TEST--
+lexer: operators_and_symbols
+--FILE--
++-*/= {} [] #{ == != > < >= <= && || |> >> ;
+--EXPECT_TOKENS--
+{"type":"+","value":"+"}
+{"type":"-","value":"-"}
+{"type":"*","value":"*"}
+{"type":"/","value":"/"}
+{"type":"=","value":"="}
+{"type":"{","value":"{"}
+{"type":"}","value":"}"}
+{"type":"[","value":"["}
+{"type":"]","value":"]"}
+{"type":"#{","value":"#{"}
+{"type":"==","value":"=="}
+{"type":"!=","value":"!="}
+{"type":">","value":">"}
+{"type":"<","value":"<"}
+{"type":">=","value":">="}
+{"type":"<=","value":"<="}
+{"type":"&&","value":"&&"}
+{"type":"||","value":"||"}
+{"type":"|>","value":"|>"}
+{"type":">>","value":">>"}
+{"type":";","value":";"}

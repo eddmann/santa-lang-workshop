@@ -1,0 +1,19 @@
+--TEST--
+evaluator: map_function
+--FILE--
+let numbers = [1, 2, 3, 4, 5];
+puts(map(|x| x * 2, numbers));
+puts(map(|x| x + 1, numbers));
+puts(map(|x| "num_" + x, numbers));
+puts(map(|x| x * x, [1, 2, 3]));
+puts(map(|x| x * 2, []));
+let double = map(|x| x * 2);
+puts(double(numbers));
+--EXPECT--
+[2, 4, 6, 8, 10] 
+[2, 3, 4, 5, 6] 
+["num_1", "num_2", "num_3", "num_4", "num_5"] 
+[1, 4, 9] 
+[] 
+[2, 4, 6, 8, 10] 
+nil

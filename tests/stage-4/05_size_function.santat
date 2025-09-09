@@ -1,0 +1,19 @@
+--TEST--
+evaluator: size_function
+--FILE--
+puts(size([1, 2, 3, 4, 5]));
+puts(size([]));
+puts(size("hello"));
+puts(size("❤🍕"));
+puts(size({1, 2, 3}));
+puts(size(#{"a": 1, "b": 2}));
+puts(size(#{}));
+--EXPECT--
+5 
+0 
+5 
+7 
+3 
+2 
+0 
+nil

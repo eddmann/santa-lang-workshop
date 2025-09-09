@@ -1,0 +1,19 @@
+--TEST--
+evaluator: fold_function
+--FILE--
+let numbers = [1, 2, 3, 4, 5];
+puts(fold(0, +, numbers));
+puts(fold(1, *, numbers));
+puts(fold(0, |acc, x| acc + x * x, numbers));
+puts(fold(10, +, numbers));
+puts(fold(42, +, []));
+let sum = fold(0, +);
+puts(sum(numbers));
+--EXPECT--
+15 
+120 
+55 
+25 
+42 
+15 
+nil

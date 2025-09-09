@@ -1,0 +1,6 @@
+--TEST--
+evaluator: error_string_repetition_decimal
+--FILE--
+"a" * 2.5;
+--EXPECT--
+[Error] Unsupported operation: String * Decimal

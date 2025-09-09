@@ -1,0 +1,14 @@
+--TEST--
+lexer: comments
+--FILE--
+// this is a comment
+123 // trailing comment
+// another comment
+"hello" // and another
+--EXPECT_TOKENS--
+{"type":"CMT","value":"// this is a comment"}
+{"type":"INT","value":"123"}
+{"type":"CMT","value":"// trailing comment"}
+{"type":"CMT","value":"// another comment"}
+{"type":"STR","value":"\"hello\""}
+{"type":"CMT","value":"// and another"}

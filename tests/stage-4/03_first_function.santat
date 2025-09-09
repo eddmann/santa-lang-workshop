@@ -1,0 +1,17 @@
+--TEST--
+evaluator: first_function
+--FILE--
+puts(first([1, 2, 3, 4, 5]));
+puts(first([42]));
+puts(first([]));
+puts(first("hello"));
+puts(first("h"));
+puts(first(""));
+--EXPECT--
+1 
+42 
+nil 
+"h" 
+"h" 
+nil 
+nil

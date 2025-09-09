@@ -1,0 +1,266 @@
+--TEST--
+parser: function_literals
+--FILE--
+let add = |x, y| x + y;
+let add = |x, y| { x + y };
+let greet = |name| "Hello, " + name;
+
+let add = |x, y| x + y
+let add = |x, y| { x + y }
+let greet = |name| "Hello, " + name
+--EXPECT_AST--
+{
+  "statements": [
+    {
+      "type": "Expression",
+      "value": {
+        "name": {
+          "name": "add",
+          "type": "Identifier"
+        },
+        "type": "Let",
+        "value": {
+          "body": {
+            "statements": [
+              {
+                "type": "Expression",
+                "value": {
+                  "left": {
+                    "name": "x",
+                    "type": "Identifier"
+                  },
+                  "operator": "+",
+                  "right": {
+                    "name": "y",
+                    "type": "Identifier"
+                  },
+                  "type": "Infix"
+                }
+              }
+            ],
+            "type": "Block"
+          },
+          "parameters": [
+            {
+              "name": "x",
+              "type": "Identifier"
+            },
+            {
+              "name": "y",
+              "type": "Identifier"
+            }
+          ],
+          "type": "Function"
+        }
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "name": {
+          "name": "add",
+          "type": "Identifier"
+        },
+        "type": "Let",
+        "value": {
+          "body": {
+            "statements": [
+              {
+                "type": "Expression",
+                "value": {
+                  "left": {
+                    "name": "x",
+                    "type": "Identifier"
+                  },
+                  "operator": "+",
+                  "right": {
+                    "name": "y",
+                    "type": "Identifier"
+                  },
+                  "type": "Infix"
+                }
+              }
+            ],
+            "type": "Block"
+          },
+          "parameters": [
+            {
+              "name": "x",
+              "type": "Identifier"
+            },
+            {
+              "name": "y",
+              "type": "Identifier"
+            }
+          ],
+          "type": "Function"
+        }
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "name": {
+          "name": "greet",
+          "type": "Identifier"
+        },
+        "type": "Let",
+        "value": {
+          "body": {
+            "statements": [
+              {
+                "type": "Expression",
+                "value": {
+                  "left": {
+                    "type": "String",
+                    "value": "Hello, "
+                  },
+                  "operator": "+",
+                  "right": {
+                    "name": "name",
+                    "type": "Identifier"
+                  },
+                  "type": "Infix"
+                }
+              }
+            ],
+            "type": "Block"
+          },
+          "parameters": [
+            {
+              "name": "name",
+              "type": "Identifier"
+            }
+          ],
+          "type": "Function"
+        }
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "name": {
+          "name": "add",
+          "type": "Identifier"
+        },
+        "type": "Let",
+        "value": {
+          "body": {
+            "statements": [
+              {
+                "type": "Expression",
+                "value": {
+                  "left": {
+                    "name": "x",
+                    "type": "Identifier"
+                  },
+                  "operator": "+",
+                  "right": {
+                    "name": "y",
+                    "type": "Identifier"
+                  },
+                  "type": "Infix"
+                }
+              }
+            ],
+            "type": "Block"
+          },
+          "parameters": [
+            {
+              "name": "x",
+              "type": "Identifier"
+            },
+            {
+              "name": "y",
+              "type": "Identifier"
+            }
+          ],
+          "type": "Function"
+        }
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "name": {
+          "name": "add",
+          "type": "Identifier"
+        },
+        "type": "Let",
+        "value": {
+          "body": {
+            "statements": [
+              {
+                "type": "Expression",
+                "value": {
+                  "left": {
+                    "name": "x",
+                    "type": "Identifier"
+                  },
+                  "operator": "+",
+                  "right": {
+                    "name": "y",
+                    "type": "Identifier"
+                  },
+                  "type": "Infix"
+                }
+              }
+            ],
+            "type": "Block"
+          },
+          "parameters": [
+            {
+              "name": "x",
+              "type": "Identifier"
+            },
+            {
+              "name": "y",
+              "type": "Identifier"
+            }
+          ],
+          "type": "Function"
+        }
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "name": {
+          "name": "greet",
+          "type": "Identifier"
+        },
+        "type": "Let",
+        "value": {
+          "body": {
+            "statements": [
+              {
+                "type": "Expression",
+                "value": {
+                  "left": {
+                    "type": "String",
+                    "value": "Hello, "
+                  },
+                  "operator": "+",
+                  "right": {
+                    "name": "name",
+                    "type": "Identifier"
+                  },
+                  "type": "Infix"
+                }
+              }
+            ],
+            "type": "Block"
+          },
+          "parameters": [
+            {
+              "name": "name",
+              "type": "Identifier"
+            }
+          ],
+          "type": "Function"
+        }
+      }
+    }
+  ],
+  "type": "Program"
+}

@@ -1,0 +1,6 @@
+--TEST--
+evaluator: error_filter_wrong_fn_type
+--FILE--
+filter(1, [1]);
+--EXPECT--
+[Error] Unexpected argument: filter(Integer, List)

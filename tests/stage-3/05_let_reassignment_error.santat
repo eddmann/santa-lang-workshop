@@ -1,0 +1,7 @@
+--TEST--
+evaluator: let_reassignment_error
+--FILE--
+let x = 42;
+x = 100;
+--EXPECT--
+[Error] Variable 'x' is not mutable

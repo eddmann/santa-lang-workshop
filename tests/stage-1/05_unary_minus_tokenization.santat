@@ -1,0 +1,9 @@
+--TEST--
+lexer: unary_minus_tokenization
+--FILE--
+-123 - 3.14
+--EXPECT_TOKENS--
+{"type":"-","value":"-"}
+{"type":"INT","value":"123"}
+{"type":"-","value":"-"}
+{"type":"DEC","value":"3.14"}

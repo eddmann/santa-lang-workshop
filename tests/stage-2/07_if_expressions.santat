@@ -1,0 +1,96 @@
+--TEST--
+parser: if_expressions
+--FILE--
+if x > 0 { "positive" } else { "negative" };
+
+if x > 0 { "positive" } else { "negative" }
+--EXPECT_AST--
+{
+  "statements": [
+    {
+      "type": "Expression",
+      "value": {
+        "alternative": {
+          "statements": [
+            {
+              "type": "Expression",
+              "value": {
+                "type": "String",
+                "value": "negative"
+              }
+            }
+          ],
+          "type": "Block"
+        },
+        "condition": {
+          "left": {
+            "name": "x",
+            "type": "Identifier"
+          },
+          "operator": ">",
+          "right": {
+            "type": "Integer",
+            "value": "0"
+          },
+          "type": "Infix"
+        },
+        "consequence": {
+          "statements": [
+            {
+              "type": "Expression",
+              "value": {
+                "type": "String",
+                "value": "positive"
+              }
+            }
+          ],
+          "type": "Block"
+        },
+        "type": "If"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "alternative": {
+          "statements": [
+            {
+              "type": "Expression",
+              "value": {
+                "type": "String",
+                "value": "negative"
+              }
+            }
+          ],
+          "type": "Block"
+        },
+        "condition": {
+          "left": {
+            "name": "x",
+            "type": "Identifier"
+          },
+          "operator": ">",
+          "right": {
+            "type": "Integer",
+            "value": "0"
+          },
+          "type": "Infix"
+        },
+        "consequence": {
+          "statements": [
+            {
+              "type": "Expression",
+              "value": {
+                "type": "String",
+                "value": "positive"
+              }
+            }
+          ],
+          "type": "Block"
+        },
+        "type": "If"
+      }
+    }
+  ],
+  "type": "Program"
+}

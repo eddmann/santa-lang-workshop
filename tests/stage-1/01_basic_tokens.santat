@@ -1,0 +1,17 @@
+--TEST--
+lexer: basic_tokens
+--FILE--
+123 456.789 1_000_000 1_000.50 0.001_234 10_000 "hello" "❤🍕" "\"" true false nil
+--EXPECT_TOKENS--
+{"type":"INT","value":"123"}
+{"type":"DEC","value":"456.789"}
+{"type":"INT","value":"1_000_000"}
+{"type":"DEC","value":"1_000.50"}
+{"type":"DEC","value":"0.001_234"}
+{"type":"INT","value":"10_000"}
+{"type":"STR","value":"\"hello\""}
+{"type":"STR","value":"\"❤🍕\""}
+{"type":"STR","value":"\"\\\"\""}
+{"type":"TRUE","value":"true"}
+{"type":"FALSE","value":"false"}
+{"type":"NIL","value":"nil"}

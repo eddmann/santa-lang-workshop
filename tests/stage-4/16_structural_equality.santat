@@ -1,0 +1,32 @@
+--TEST--
+evaluator: structural_equality
+--FILE--
+// Primitives
+puts(1 == 1);
+puts(1 == 2);
+puts(3.14 == 3.14);
+puts(true == true);
+puts(false == true);
+puts("a" == "a");
+puts("a" == "b");
+puts(nil == nil);
+
+// Collections (structural)
+puts([1,2] == [1,2]);
+puts([1,2] == [2,1]);
+puts({1,2} == {2,1});
+puts(#{"a":1, "b":2} == #{"b":2, "a":1});
+--EXPECT--
+true 
+false 
+true 
+true 
+false 
+true 
+false 
+true 
+true 
+false 
+true 
+true 
+nil

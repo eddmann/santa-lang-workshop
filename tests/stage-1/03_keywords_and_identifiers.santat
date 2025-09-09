@@ -1,0 +1,12 @@
+--TEST--
+lexer: keywords_and_identifiers
+--FILE--
+let mut if else
+x y_123
+--EXPECT_TOKENS--
+{"type":"LET","value":"let"}
+{"type":"MUT","value":"mut"}
+{"type":"IF","value":"if"}
+{"type":"ELSE","value":"else"}
+{"type":"ID","value":"x"}
+{"type":"ID","value":"y_123"}

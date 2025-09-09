@@ -1,0 +1,11 @@
+--TEST--
+evaluator: division_and_repetition
+--FILE--
+puts(3 / 2);
+puts(-3 / 2);
+puts("a" * 0);
+--EXPECT--
+1 
+-1 
+"" 
+nil

@@ -1,0 +1,17 @@
+--TEST--
+evaluator: filter_function
+--FILE--
+let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+puts(filter(|x| x > 5, numbers));
+puts(filter(|x| x < 3, numbers));
+puts(filter(|x| x == 5, numbers));
+puts(filter(|x| x > 0, []));
+let ignore5 = filter(|x| x == 5);
+puts(ignore5(numbers));
+--EXPECT--
+[6, 7, 8, 9, 10] 
+[1, 2] 
+[5] 
+[] 
+[5] 
+nil

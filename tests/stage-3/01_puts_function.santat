@@ -1,0 +1,9 @@
+--TEST--
+evaluator: puts_function
+--FILE--
+puts("Hello, World!");
+puts("Hello", ", ", "World!");
+--EXPECT--
+"Hello, World!" 
+"Hello" ", " "World!" 
+nil

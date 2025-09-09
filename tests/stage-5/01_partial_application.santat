@@ -1,0 +1,15 @@
+--TEST--
+evaluator: partial_application
+--FILE--
+let add = |x, y| x + y;
+let inc = add(1);
+puts(inc(1));
+let inc2 = +(1);
+puts(inc2(1));
+let add3 = push(3);
+puts(add3([1, 2]));
+--EXPECT--
+2 
+2 
+[1, 2, 3] 
+nil

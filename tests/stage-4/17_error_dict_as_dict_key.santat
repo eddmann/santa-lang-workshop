@@ -1,0 +1,7 @@
+--TEST--
+evaluator: error_dict_as_dict_key
+--FILE--
+let kd = #{ #{"a":1}: "v" };
+kd[#{"a":1}];
+--EXPECT--
+[Error] Unable to use a Dictionary as a Dictionary key

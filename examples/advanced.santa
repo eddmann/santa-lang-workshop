@@ -1,0 +1,52 @@
+// advanced.santa — recursion, closures, complex collections, indexing, errors
+
+// Recursive factorial
+let factorial = |n| if n <= 1 { 1 } else { n * factorial(n - 1) };
+puts(factorial(6)); // 720
+
+// Closures capturing and mutating outer variables via reference
+let mut counter = 0;
+let bump = || { counter = counter + 1; counter };
+puts(bump());
+puts(bump());
+puts(counter);
+
+// Complex collections and structural equality
+let list = [1, 2, [3, 4], #{"k": {1,2}}];
+let setv = {1, "hello", [2, 3]};
+let dict = #{1: "one", "two": 2, [1,2]: #{"nested": [3,4]}};
+puts(list);
+puts(setv);
+puts(dict);
+
+// Indexing edge cases
+puts("hello"[0]);
+puts("hello"[99]);
+puts([10,20,30][-1]);
+puts(dict[[1,2]]);
+puts(dict[#{"nested": [3,4]}]); // key not present -> nil
+
+// Right-biased dictionary merge chains
+let d1 = #{"a": 1};
+let d2 = #{"a": 2, "b": 3};
+let d3 = #{"b": 4, "c": 5};
+puts(d1 + d2 + d3);
+
+// Higher-order: map/filter/fold with composed functions
+let inc = |x| x + 1;
+let square = |x| x * x;
+let inc_then_square = inc >> square;
+let nums = [1,2,3,4,5];
+let transformed = nums |> map(inc_then_square) |> filter(|x| x > 10);
+puts(transformed);
+puts(fold(0, +, transformed));
+
+// Sets: push dictionary and show size
+let s = {1, 2};
+let s2 = push(#{"k": "v"}, s);
+puts(size(s2));
+
+// String repetition and errors
+puts("ab" * 3);
+// The following would be an error if enabled in tests:
+// puts("a" * -1);

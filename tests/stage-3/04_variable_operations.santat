@@ -1,0 +1,12 @@
+--TEST--
+evaluator: variable_operations
+--FILE--
+let x = 42;
+puts(x);
+let mut y = 10;
+y = 20;
+puts(y);
+--EXPECT--
+42 
+20 
+nil

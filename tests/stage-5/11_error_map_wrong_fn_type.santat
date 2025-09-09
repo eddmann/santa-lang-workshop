@@ -1,0 +1,6 @@
+--TEST--
+evaluator: error_map_wrong_fn_type
+--FILE--
+map(1, [1]);
+--EXPECT--
+[Error] Unexpected argument: map(Integer, List)

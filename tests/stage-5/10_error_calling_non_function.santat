@@ -1,0 +1,6 @@
+--TEST--
+evaluator: error_calling_non_function
+--FILE--
+1(2);
+--EXPECT--
+[Error] Expected a Function, found: Integer

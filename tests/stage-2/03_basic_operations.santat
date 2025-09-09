@@ -1,0 +1,362 @@
+--TEST--
+parser: basic_operations
+--FILE--
+1 + 2;
+3 * 4;
+10 / 2;
+5 - 3;
+1 + 2 * 3;
+1 + 2 / 3 * 5;
+3 * (5 + 1);
+1_000.50 * 2;
+10_000 / 1_000;
+
+1 + 2
+3 * 4
+10 / 2
+5 - 3
+1 + 2 * 3
+1 + 2 / 3 * 5
+3 * (5 + 1)
+1_000.50 * 2
+10_000 / 1_000
+--EXPECT_AST--
+{
+  "statements": [
+    {
+      "type": "Expression",
+      "value": {
+        "left": {
+          "type": "Integer",
+          "value": "1"
+        },
+        "operator": "+",
+        "right": {
+          "type": "Integer",
+          "value": "2"
+        },
+        "type": "Infix"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "left": {
+          "type": "Integer",
+          "value": "3"
+        },
+        "operator": "*",
+        "right": {
+          "type": "Integer",
+          "value": "4"
+        },
+        "type": "Infix"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "left": {
+          "type": "Integer",
+          "value": "10"
+        },
+        "operator": "/",
+        "right": {
+          "type": "Integer",
+          "value": "2"
+        },
+        "type": "Infix"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "left": {
+          "type": "Integer",
+          "value": "5"
+        },
+        "operator": "-",
+        "right": {
+          "type": "Integer",
+          "value": "3"
+        },
+        "type": "Infix"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "left": {
+          "type": "Integer",
+          "value": "1"
+        },
+        "operator": "+",
+        "right": {
+          "left": {
+            "type": "Integer",
+            "value": "2"
+          },
+          "operator": "*",
+          "right": {
+            "type": "Integer",
+            "value": "3"
+          },
+          "type": "Infix"
+        },
+        "type": "Infix"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "left": {
+          "type": "Integer",
+          "value": "1"
+        },
+        "operator": "+",
+        "right": {
+          "left": {
+            "left": {
+              "type": "Integer",
+              "value": "2"
+            },
+            "operator": "/",
+            "right": {
+              "type": "Integer",
+              "value": "3"
+            },
+            "type": "Infix"
+          },
+          "operator": "*",
+          "right": {
+            "type": "Integer",
+            "value": "5"
+          },
+          "type": "Infix"
+        },
+        "type": "Infix"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "left": {
+          "type": "Integer",
+          "value": "3"
+        },
+        "operator": "*",
+        "right": {
+          "left": {
+            "type": "Integer",
+            "value": "5"
+          },
+          "operator": "+",
+          "right": {
+            "type": "Integer",
+            "value": "1"
+          },
+          "type": "Infix"
+        },
+        "type": "Infix"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "left": {
+          "type": "Decimal",
+          "value": "1_000.50"
+        },
+        "operator": "*",
+        "right": {
+          "type": "Integer",
+          "value": "2"
+        },
+        "type": "Infix"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "left": {
+          "type": "Integer",
+          "value": "10_000"
+        },
+        "operator": "/",
+        "right": {
+          "type": "Integer",
+          "value": "1_000"
+        },
+        "type": "Infix"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "left": {
+          "type": "Integer",
+          "value": "1"
+        },
+        "operator": "+",
+        "right": {
+          "type": "Integer",
+          "value": "2"
+        },
+        "type": "Infix"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "left": {
+          "type": "Integer",
+          "value": "3"
+        },
+        "operator": "*",
+        "right": {
+          "type": "Integer",
+          "value": "4"
+        },
+        "type": "Infix"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "left": {
+          "type": "Integer",
+          "value": "10"
+        },
+        "operator": "/",
+        "right": {
+          "type": "Integer",
+          "value": "2"
+        },
+        "type": "Infix"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "left": {
+          "type": "Integer",
+          "value": "5"
+        },
+        "operator": "-",
+        "right": {
+          "type": "Integer",
+          "value": "3"
+        },
+        "type": "Infix"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "left": {
+          "type": "Integer",
+          "value": "1"
+        },
+        "operator": "+",
+        "right": {
+          "left": {
+            "type": "Integer",
+            "value": "2"
+          },
+          "operator": "*",
+          "right": {
+            "type": "Integer",
+            "value": "3"
+          },
+          "type": "Infix"
+        },
+        "type": "Infix"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "left": {
+          "type": "Integer",
+          "value": "1"
+        },
+        "operator": "+",
+        "right": {
+          "left": {
+            "left": {
+              "type": "Integer",
+              "value": "2"
+            },
+            "operator": "/",
+            "right": {
+              "type": "Integer",
+              "value": "3"
+            },
+            "type": "Infix"
+          },
+          "operator": "*",
+          "right": {
+            "type": "Integer",
+            "value": "5"
+          },
+          "type": "Infix"
+        },
+        "type": "Infix"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "left": {
+          "type": "Integer",
+          "value": "3"
+        },
+        "operator": "*",
+        "right": {
+          "left": {
+            "type": "Integer",
+            "value": "5"
+          },
+          "operator": "+",
+          "right": {
+            "type": "Integer",
+            "value": "1"
+          },
+          "type": "Infix"
+        },
+        "type": "Infix"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "left": {
+          "type": "Decimal",
+          "value": "1_000.50"
+        },
+        "operator": "*",
+        "right": {
+          "type": "Integer",
+          "value": "2"
+        },
+        "type": "Infix"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "left": {
+          "type": "Integer",
+          "value": "10_000"
+        },
+        "operator": "/",
+        "right": {
+          "type": "Integer",
+          "value": "1_000"
+        },
+        "type": "Infix"
+      }
+    }
+  ],
+  "type": "Program"
+}

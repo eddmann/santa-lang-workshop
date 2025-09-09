@@ -1,0 +1,7 @@
+--TEST--
+evaluator: error_string_index_boolean
+--FILE--
+let str = "ab";
+str[false];
+--EXPECT--
+[Error] Unable to perform index operation, found: String[Boolean]

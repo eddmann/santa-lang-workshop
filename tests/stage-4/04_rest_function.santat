@@ -1,0 +1,17 @@
+--TEST--
+evaluator: rest_function
+--FILE--
+puts(rest([1, 2, 3, 4, 5]));
+puts(rest([42]));
+puts(rest([]));
+puts(rest("hello"));
+puts(rest("h"));
+puts(rest(""));
+--EXPECT--
+[2, 3, 4, 5] 
+[] 
+[] 
+"ello" 
+"" 
+"" 
+nil

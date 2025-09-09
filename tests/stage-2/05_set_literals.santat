@@ -1,0 +1,262 @@
+--TEST--
+parser: set_literals
+--FILE--
+{};
+{1};
+{1, 2, 3};
+{"a", "b", "c"};
+{1, "mixed", true, 3.14, nil};
+{[1, 2], {3, 4}};
+
+{}
+{1}
+{1, 2, 3}
+{"a", "b", "c"}
+{1, "mixed", true, 3.14, nil}
+{[1, 2], {3, 4}}
+--EXPECT_AST--
+{
+  "statements": [
+    {
+      "type": "Expression",
+      "value": {
+        "items": [],
+        "type": "Set"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "items": [
+          {
+            "type": "Integer",
+            "value": "1"
+          }
+        ],
+        "type": "Set"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "items": [
+          {
+            "type": "Integer",
+            "value": "1"
+          },
+          {
+            "type": "Integer",
+            "value": "2"
+          },
+          {
+            "type": "Integer",
+            "value": "3"
+          }
+        ],
+        "type": "Set"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "items": [
+          {
+            "type": "String",
+            "value": "a"
+          },
+          {
+            "type": "String",
+            "value": "b"
+          },
+          {
+            "type": "String",
+            "value": "c"
+          }
+        ],
+        "type": "Set"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "items": [
+          {
+            "type": "Integer",
+            "value": "1"
+          },
+          {
+            "type": "String",
+            "value": "mixed"
+          },
+          {
+            "type": "Boolean",
+            "value": true
+          },
+          {
+            "type": "Decimal",
+            "value": "3.14"
+          },
+          {
+            "type": "Nil"
+          }
+        ],
+        "type": "Set"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "items": [
+          {
+            "items": [
+              {
+                "type": "Integer",
+                "value": "1"
+              },
+              {
+                "type": "Integer",
+                "value": "2"
+              }
+            ],
+            "type": "List"
+          },
+          {
+            "items": [
+              {
+                "type": "Integer",
+                "value": "3"
+              },
+              {
+                "type": "Integer",
+                "value": "4"
+              }
+            ],
+            "type": "Set"
+          }
+        ],
+        "type": "Set"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "items": [],
+        "type": "Set"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "items": [
+          {
+            "type": "Integer",
+            "value": "1"
+          }
+        ],
+        "type": "Set"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "items": [
+          {
+            "type": "Integer",
+            "value": "1"
+          },
+          {
+            "type": "Integer",
+            "value": "2"
+          },
+          {
+            "type": "Integer",
+            "value": "3"
+          }
+        ],
+        "type": "Set"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "items": [
+          {
+            "type": "String",
+            "value": "a"
+          },
+          {
+            "type": "String",
+            "value": "b"
+          },
+          {
+            "type": "String",
+            "value": "c"
+          }
+        ],
+        "type": "Set"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "items": [
+          {
+            "type": "Integer",
+            "value": "1"
+          },
+          {
+            "type": "String",
+            "value": "mixed"
+          },
+          {
+            "type": "Boolean",
+            "value": true
+          },
+          {
+            "type": "Decimal",
+            "value": "3.14"
+          },
+          {
+            "type": "Nil"
+          }
+        ],
+        "type": "Set"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "items": [
+          {
+            "items": [
+              {
+                "type": "Integer",
+                "value": "1"
+              },
+              {
+                "type": "Integer",
+                "value": "2"
+              }
+            ],
+            "type": "List"
+          },
+          {
+            "items": [
+              {
+                "type": "Integer",
+                "value": "3"
+              },
+              {
+                "type": "Integer",
+                "value": "4"
+              }
+            ],
+            "type": "Set"
+          }
+        ],
+        "type": "Set"
+      }
+    }
+  ],
+  "type": "Program"
+}

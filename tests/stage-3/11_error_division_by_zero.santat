@@ -1,0 +1,6 @@
+--TEST--
+evaluator: error_division_by_zero
+--FILE--
+1 / 0;
+--EXPECT--
+[Error] Division by zero

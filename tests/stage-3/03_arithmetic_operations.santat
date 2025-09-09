@@ -1,0 +1,27 @@
+--TEST--
+evaluator: arithmetic_operations
+--FILE--
+puts(1 + 2);
+puts(3 * 4);
+puts(10 / 2);
+puts(5 - 3);
+puts(1 + 2 * 3);
+puts(1 + 2 / 3 * 5);
+puts(3 * (5 + 1));
+puts(1_000.50 * 2);
+puts(10_000 / 1_000);
++(1, 2);
+*(3, 6);
+/(10, 2);
+// -(5, 3);
+--EXPECT--
+3 
+12 
+5 
+2 
+7 
+1 
+18 
+2001 
+10 
+5

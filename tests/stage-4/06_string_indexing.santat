@@ -1,0 +1,16 @@
+--TEST--
+evaluator: string_indexing
+--FILE--
+let string = "hello";
+puts(string[0]);
+puts(string[1]);
+puts(string[-1]);
+puts(string[-5]);
+puts(string[5]);
+--EXPECT--
+"h" 
+"e" 
+"o" 
+"h" 
+nil 
+nil

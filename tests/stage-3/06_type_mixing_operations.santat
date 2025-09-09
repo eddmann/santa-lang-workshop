@@ -1,0 +1,29 @@
+--TEST--
+evaluator: type_mixing_operations
+--FILE--
+puts(1 + 2.5);
+puts(3.14 + 1);
+puts(2.5 * 3);
+puts(10 / 2.5);
+puts("Hello" + " World");
+puts("Number: " + 42);
+puts("Count: " + 5 + " items");
+puts("" + 3.14 + " is pi");
+puts(true && "hello");
+puts(false || "world");
+puts(0 || "default");
+puts("repeat" * 5);
+--EXPECT--
+3.5 
+4.140000000000001 
+7.5 
+4 
+"Hello World" 
+"Number: 42" 
+"Count: 5 items" 
+"3.14 is pi" 
+true 
+true 
+true 
+"repeatrepeatrepeatrepeatrepeat" 
+nil

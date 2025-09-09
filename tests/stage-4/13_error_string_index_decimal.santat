@@ -1,0 +1,7 @@
+--TEST--
+evaluator: error_string_index_decimal
+--FILE--
+let str = "ab";
+str[1.0];
+--EXPECT--
+[Error] Unable to perform index operation, found: String[Decimal]

@@ -1,0 +1,27 @@
+--TEST--
+evaluator: operator_functions_threading_composition
+--FILE--
+// Operator functions in prefix form
+puts(+(1, 2));
+puts(*(3, 4));
+puts(/(10, 2));
+// puts(-(5, 3));
+
+// Threading with multi-arg functions
+puts([1,2] |> push(3));
+puts(#{} |> assoc("a", 1));
+
+// Composition right-associativity
+let f = +(1);
+let g = *(2);
+let h = +(3);
+let c = f >> g >> h; // h(g(f(x)));
+puts(c(1));
+--EXPECT--
+3 
+12 
+5 
+[1, 2, 3] 
+#{"a": 1} 
+7 
+nil

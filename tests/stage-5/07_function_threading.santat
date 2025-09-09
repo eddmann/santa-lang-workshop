@@ -1,0 +1,14 @@
+--TEST--
+evaluator: function_composition
+--FILE--
+let list = [1, 2, 3];
+puts(list |> push(4) |> push(5));
+puts(list |> push(4) |> fold(0, +));
+puts(list |> size);
+puts(4 |> |a| a * 2 |> |b| b * 2);
+--EXPECT--
+[1, 2, 3, 4, 5] 
+10 
+3 
+16 
+nil

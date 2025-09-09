@@ -1,0 +1,16 @@
+--TEST--
+evaluator: list_indexing
+--FILE--
+let dict = #{1: "1", "2": 2};
+puts(dict[0]);
+puts(dict[1]);
+puts(dict["2"]);
+puts(dict[3]);
+puts(dict["3"]);
+--EXPECT--
+nil 
+"1" 
+2 
+nil 
+nil 
+nil

@@ -1,0 +1,22 @@
+--TEST--
+evaluator: push_function
+--FILE--
+let list = [1, 2, 3];
+puts(push(4, list));
+puts(push(5, push(4, list)));
+puts(list);
+puts([1, 2] + 3);
+puts([1, 2] + [3]);
+
+let set = {1, 2, 3};
+puts(push(4, set));
+puts(push(5, push(4, set)));
+puts(push(1, set));
+puts(set);
+puts({1, 2} + 3);
+puts({1, 2} + {3});
+--EXPECT--
+[1, 2, 3, 4] 
+[1, 2, 3, 4, 5] 
+[1, 2, 3] 
+[Error] Unsupported operation: List + Integer

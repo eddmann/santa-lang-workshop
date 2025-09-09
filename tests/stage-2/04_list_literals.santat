@@ -1,0 +1,206 @@
+--TEST--
+parser: list_literals
+--FILE--
+[];
+[1];
+[1, 2, 3];
+["a", "b", "c"];
+[1, "mixed", true, 3.14, nil];
+[[1, 2], {3, 4}];
+[1, 2, 3][0];
+let list = [1, 2, 3];
+list[0];
+--EXPECT_AST--
+{
+  "statements": [
+    {
+      "type": "Expression",
+      "value": {
+        "items": [],
+        "type": "List"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "items": [
+          {
+            "type": "Integer",
+            "value": "1"
+          }
+        ],
+        "type": "List"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "items": [
+          {
+            "type": "Integer",
+            "value": "1"
+          },
+          {
+            "type": "Integer",
+            "value": "2"
+          },
+          {
+            "type": "Integer",
+            "value": "3"
+          }
+        ],
+        "type": "List"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "items": [
+          {
+            "type": "String",
+            "value": "a"
+          },
+          {
+            "type": "String",
+            "value": "b"
+          },
+          {
+            "type": "String",
+            "value": "c"
+          }
+        ],
+        "type": "List"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "items": [
+          {
+            "type": "Integer",
+            "value": "1"
+          },
+          {
+            "type": "String",
+            "value": "mixed"
+          },
+          {
+            "type": "Boolean",
+            "value": true
+          },
+          {
+            "type": "Decimal",
+            "value": "3.14"
+          },
+          {
+            "type": "Nil"
+          }
+        ],
+        "type": "List"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "items": [
+          {
+            "items": [
+              {
+                "type": "Integer",
+                "value": "1"
+              },
+              {
+                "type": "Integer",
+                "value": "2"
+              }
+            ],
+            "type": "List"
+          },
+          {
+            "items": [
+              {
+                "type": "Integer",
+                "value": "3"
+              },
+              {
+                "type": "Integer",
+                "value": "4"
+              }
+            ],
+            "type": "Set"
+          }
+        ],
+        "type": "List"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "index": {
+          "type": "Integer",
+          "value": "0"
+        },
+        "left": {
+          "items": [
+            {
+              "type": "Integer",
+              "value": "1"
+            },
+            {
+              "type": "Integer",
+              "value": "2"
+            },
+            {
+              "type": "Integer",
+              "value": "3"
+            }
+          ],
+          "type": "List"
+        },
+        "type": "Index"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "name": {
+          "name": "list",
+          "type": "Identifier"
+        },
+        "type": "Let",
+        "value": {
+          "items": [
+            {
+              "type": "Integer",
+              "value": "1"
+            },
+            {
+              "type": "Integer",
+              "value": "2"
+            },
+            {
+              "type": "Integer",
+              "value": "3"
+            }
+          ],
+          "type": "List"
+        }
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "index": {
+          "type": "Integer",
+          "value": "0"
+        },
+        "left": {
+          "name": "list",
+          "type": "Identifier"
+        },
+        "type": "Index"
+      }
+    }
+  ],
+  "type": "Program"
+}

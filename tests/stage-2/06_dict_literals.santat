@@ -1,0 +1,486 @@
+--TEST--
+parser: dict_literals
+--FILE--
+#{};
+#{"a": 1};
+#{"a": 1, "b": 2};
+#{1: "one", 2: true, "3": nil};
+#{"nested": #{"inner": "value"}};
+#{[1, 2]: "list_key", "string": [3, 4]};
+#{"a": 1}["a"];
+let dict = #{"a": 1};
+dict["a"];
+
+#{}
+#{"a": 1}
+#{"a": 1, "b": 2}
+#{1: "one", 2: true, "3": nil}
+#{"nested": #{"inner": "value"}}
+#{[1, 2]: "list_key", "string": [3, 4]}
+#{"a": 1}["a"];
+let dict = #{"a": 1};
+dict["a"];
+--EXPECT_AST--
+{
+  "statements": [
+    {
+      "type": "Expression",
+      "value": {
+        "items": [],
+        "type": "Dictionary"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "items": [
+          {
+            "key": {
+              "type": "String",
+              "value": "a"
+            },
+            "value": {
+              "type": "Integer",
+              "value": "1"
+            }
+          }
+        ],
+        "type": "Dictionary"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "items": [
+          {
+            "key": {
+              "type": "String",
+              "value": "a"
+            },
+            "value": {
+              "type": "Integer",
+              "value": "1"
+            }
+          },
+          {
+            "key": {
+              "type": "String",
+              "value": "b"
+            },
+            "value": {
+              "type": "Integer",
+              "value": "2"
+            }
+          }
+        ],
+        "type": "Dictionary"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "items": [
+          {
+            "key": {
+              "type": "Integer",
+              "value": "1"
+            },
+            "value": {
+              "type": "String",
+              "value": "one"
+            }
+          },
+          {
+            "key": {
+              "type": "Integer",
+              "value": "2"
+            },
+            "value": {
+              "type": "Boolean",
+              "value": true
+            }
+          },
+          {
+            "key": {
+              "type": "String",
+              "value": "3"
+            },
+            "value": {
+              "type": "Nil"
+            }
+          }
+        ],
+        "type": "Dictionary"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "items": [
+          {
+            "key": {
+              "type": "String",
+              "value": "nested"
+            },
+            "value": {
+              "items": [
+                {
+                  "key": {
+                    "type": "String",
+                    "value": "inner"
+                  },
+                  "value": {
+                    "type": "String",
+                    "value": "value"
+                  }
+                }
+              ],
+              "type": "Dictionary"
+            }
+          }
+        ],
+        "type": "Dictionary"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "items": [
+          {
+            "key": {
+              "items": [
+                {
+                  "type": "Integer",
+                  "value": "1"
+                },
+                {
+                  "type": "Integer",
+                  "value": "2"
+                }
+              ],
+              "type": "List"
+            },
+            "value": {
+              "type": "String",
+              "value": "list_key"
+            }
+          },
+          {
+            "key": {
+              "type": "String",
+              "value": "string"
+            },
+            "value": {
+              "items": [
+                {
+                  "type": "Integer",
+                  "value": "3"
+                },
+                {
+                  "type": "Integer",
+                  "value": "4"
+                }
+              ],
+              "type": "List"
+            }
+          }
+        ],
+        "type": "Dictionary"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "index": {
+          "type": "String",
+          "value": "a"
+        },
+        "left": {
+          "items": [
+            {
+              "key": {
+                "type": "String",
+                "value": "a"
+              },
+              "value": {
+                "type": "Integer",
+                "value": "1"
+              }
+            }
+          ],
+          "type": "Dictionary"
+        },
+        "type": "Index"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "name": {
+          "name": "dict",
+          "type": "Identifier"
+        },
+        "type": "Let",
+        "value": {
+          "items": [
+            {
+              "key": {
+                "type": "String",
+                "value": "a"
+              },
+              "value": {
+                "type": "Integer",
+                "value": "1"
+              }
+            }
+          ],
+          "type": "Dictionary"
+        }
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "index": {
+          "type": "String",
+          "value": "a"
+        },
+        "left": {
+          "name": "dict",
+          "type": "Identifier"
+        },
+        "type": "Index"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "items": [],
+        "type": "Dictionary"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "items": [
+          {
+            "key": {
+              "type": "String",
+              "value": "a"
+            },
+            "value": {
+              "type": "Integer",
+              "value": "1"
+            }
+          }
+        ],
+        "type": "Dictionary"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "items": [
+          {
+            "key": {
+              "type": "String",
+              "value": "a"
+            },
+            "value": {
+              "type": "Integer",
+              "value": "1"
+            }
+          },
+          {
+            "key": {
+              "type": "String",
+              "value": "b"
+            },
+            "value": {
+              "type": "Integer",
+              "value": "2"
+            }
+          }
+        ],
+        "type": "Dictionary"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "items": [
+          {
+            "key": {
+              "type": "Integer",
+              "value": "1"
+            },
+            "value": {
+              "type": "String",
+              "value": "one"
+            }
+          },
+          {
+            "key": {
+              "type": "Integer",
+              "value": "2"
+            },
+            "value": {
+              "type": "Boolean",
+              "value": true
+            }
+          },
+          {
+            "key": {
+              "type": "String",
+              "value": "3"
+            },
+            "value": {
+              "type": "Nil"
+            }
+          }
+        ],
+        "type": "Dictionary"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "items": [
+          {
+            "key": {
+              "type": "String",
+              "value": "nested"
+            },
+            "value": {
+              "items": [
+                {
+                  "key": {
+                    "type": "String",
+                    "value": "inner"
+                  },
+                  "value": {
+                    "type": "String",
+                    "value": "value"
+                  }
+                }
+              ],
+              "type": "Dictionary"
+            }
+          }
+        ],
+        "type": "Dictionary"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "items": [
+          {
+            "key": {
+              "items": [
+                {
+                  "type": "Integer",
+                  "value": "1"
+                },
+                {
+                  "type": "Integer",
+                  "value": "2"
+                }
+              ],
+              "type": "List"
+            },
+            "value": {
+              "type": "String",
+              "value": "list_key"
+            }
+          },
+          {
+            "key": {
+              "type": "String",
+              "value": "string"
+            },
+            "value": {
+              "items": [
+                {
+                  "type": "Integer",
+                  "value": "3"
+                },
+                {
+                  "type": "Integer",
+                  "value": "4"
+                }
+              ],
+              "type": "List"
+            }
+          }
+        ],
+        "type": "Dictionary"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "index": {
+          "type": "String",
+          "value": "a"
+        },
+        "left": {
+          "items": [
+            {
+              "key": {
+                "type": "String",
+                "value": "a"
+              },
+              "value": {
+                "type": "Integer",
+                "value": "1"
+              }
+            }
+          ],
+          "type": "Dictionary"
+        },
+        "type": "Index"
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "name": {
+          "name": "dict",
+          "type": "Identifier"
+        },
+        "type": "Let",
+        "value": {
+          "items": [
+            {
+              "key": {
+                "type": "String",
+                "value": "a"
+              },
+              "value": {
+                "type": "Integer",
+                "value": "1"
+              }
+            }
+          ],
+          "type": "Dictionary"
+        }
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "index": {
+          "type": "String",
+          "value": "a"
+        },
+        "left": {
+          "name": "dict",
+          "type": "Identifier"
+        },
+        "type": "Index"
+      }
+    }
+  ],
+  "type": "Program"
+}

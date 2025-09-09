@@ -1,0 +1,52 @@
+// basics.santa — core literals, lets, arithmetic, if, functions, puts
+
+// Literals and puts
+puts(42);
+puts(3.14);
+puts("hello\nworld");
+puts(true);
+puts(false);
+puts(nil);
+
+// Variables and arithmetic
+let a = 10;
+let b = 3;
+puts(a + b);
+puts(a - b);
+puts(a * b);
+puts(a / b); // integer division truncates toward zero
+
+// If expression
+let bigger = if a > b { a } else { b };
+puts(bigger);
+
+// Lists, sets, dicts
+let list = [1, 2, 3];
+let setv = {1, 2, 2, 3};
+let dict = #{"a": 1, "b": 2};
+puts(list);
+puts(setv);
+puts(dict);
+
+// Indexing
+puts(list[0]);
+puts("abc"[1]);
+puts(dict["a"]);
+puts(list[99]); // out of bounds -> nil
+
+// Function literal and call
+let add = |x, y| x + y;
+puts(add(7, 5));
+
+// Built-ins
+puts(first(list));
+puts(rest(list));
+puts(push(4, list));
+puts(size(list));
+puts(size("❤❤❤"));
+
+// Operator as function
+puts(fold(0, +, [1,2,3]));
+
+// Threading simple
+puts([1,2,3] |> push(4) |> size);

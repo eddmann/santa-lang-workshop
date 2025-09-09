@@ -1,0 +1,8 @@
+--TEST--
+evaluator: recursive_functions
+--FILE--
+let factorial = |n| if n <= 1 { 1 } else { n * factorial(n - 1) };
+puts(factorial(5));
+--EXPECT--
+120 
+nil

@@ -1,0 +1,31 @@
+--TEST--
+evaluator: assoc_function
+--FILE--
+let dict = #{"a": 1, "b": 2};
+puts(assoc("c", 3, dict));
+puts(assoc("a", 10, dict));
+puts(dict);
+
+let empty = #{};
+puts(assoc("first", 1, empty));
+puts(assoc("second", 2, assoc("first", 1, empty)));
+puts(empty)
+
+let nested = #{"outer": #{"inner": 1}};
+puts(assoc("outer", #{"inner": 2}, nested));
+puts(assoc("new", [1, 2, 3], nested));
+
+puts(#{"a": 1} + #{"b": 2})
+puts(#{"a": 1} + #{"a": 2})
+--EXPECT--
+#{"a": 1, "b": 2, "c": 3} 
+#{"a": 10, "b": 2} 
+#{"a": 1, "b": 2} 
+#{"first": 1} 
+#{"first": 1, "second": 2} 
+#{} 
+#{"outer": #{"inner": 2}} 
+#{"new": [1, 2, 3], "outer": #{"inner": 1}} 
+#{"a": 1, "b": 2} 
+#{"a": 2} 
+nil

@@ -1,0 +1,6 @@
+--TEST--
+evaluator: error_fold_wrong_fn_type
+--FILE--
+fold(0, 1, [1]);
+--EXPECT--
+[Error] Unexpected argument: fold(Integer, Integer, List)

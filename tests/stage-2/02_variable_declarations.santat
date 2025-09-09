@@ -1,0 +1,70 @@
+--TEST--
+parser: variable_declarations
+--FILE--
+let x = 42;
+let mut y = "hello";
+
+let a = 42
+let mut b = "hello"
+--EXPECT_AST--
+{
+  "statements": [
+    {
+      "type": "Expression",
+      "value": {
+        "name": {
+          "name": "x",
+          "type": "Identifier"
+        },
+        "type": "Let",
+        "value": {
+          "type": "Integer",
+          "value": "42"
+        }
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "name": {
+          "name": "y",
+          "type": "Identifier"
+        },
+        "type": "MutableLet",
+        "value": {
+          "type": "String",
+          "value": "hello"
+        }
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "name": {
+          "name": "a",
+          "type": "Identifier"
+        },
+        "type": "Let",
+        "value": {
+          "type": "Integer",
+          "value": "42"
+        }
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "name": {
+          "name": "b",
+          "type": "Identifier"
+        },
+        "type": "MutableLet",
+        "value": {
+          "type": "String",
+          "value": "hello"
+        }
+      }
+    }
+  ],
+  "type": "Program"
+}

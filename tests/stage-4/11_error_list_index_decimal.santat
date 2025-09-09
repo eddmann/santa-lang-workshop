@@ -1,0 +1,7 @@
+--TEST--
+evaluator: error_list_index_decimal
+--FILE--
+let list = [1,2,3];
+list[1.0];
+--EXPECT--
+[Error] Unable to perform index operation, found: List[Decimal]
