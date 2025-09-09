@@ -1,0 +1,109 @@
+name: Test implementations
+
+on: push
+
+permissions:
+  contents: read
+
+concurrency:
+  group: test-implementations
+  cancel-in-progress: true
+
+jobs:
+  build-tools:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: tools -> target
+
+      - name: Build tools
+        working-directory: tools
+        run: cargo build --release
+
+      - name: Upload tools artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: santa-tools
+          path: tools/target/release/
+          retention-days: 1
+
+  discover-implementations:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Discover implementations
+        id: set-matrix
+        run: |
+          # Find all directories in impl/ that contain a Makefile
+          implementations=$(find impl -maxdepth 1 -type d -name "*-*" | sed 's|impl/||' | jq -R -s -c 'split("\n")[:-1]')
+          echo "matrix={\"implementation\":$implementations}" >> $GITHUB_OUTPUT
+          echo "Found implementations: $implementations"
+
+  test-implementation:
+    needs: [build-tools, discover-implementations]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{ fromJSON(needs.discover-implementations.outputs.matrix) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download tools artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: santa-tools
+          path: tools/target/release/
+
+      - name: Create tools/bin directory and copy tools
+        run: |
+          mkdir -p tools/bin
+          cp tools/target/release/santa-* tools/bin/
+          chmod +x tools/bin/santa-*
+
+      - name: Build CLI image
+        run: make -C ./impl/${{ matrix.implementation }} cli-image
+
+      - name: Run tests
+        id: test
+        run: |
+          echo "Testing implementation: ${{ matrix.implementation }}"
+          if make -C ./impl/${{ matrix.implementation }} test; then
+            echo "✅ Tests PASSED for ${{ matrix.implementation }}"
+            echo "status=success" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Tests FAILED for ${{ matrix.implementation }}"
+            echo "status=failure" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+
+      - name: Test results summary
+        if: always()
+        run: |
+          echo "## Test Results for ${{ matrix.implementation }}" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.test.outcome }}" = "success" ]; then
+            echo "✅ **PASSED**" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **FAILED**" >> $GITHUB_STEP_SUMMARY
+          fi
+
+  test-summary:
+    needs: [discover-implementations, test-implementation]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Test summary
+        run: |
+          echo "## Implementation Test Summary" >> $GITHUB_STEP_SUMMARY
+          echo "All implementation tests have completed. Check individual job results above for details." >> $GITHUB_STEP_SUMMARY

@@ -1,6 +1,6 @@
 ARG BUILDER_IMAGE=local/santa-python-claudecode-sonnet4-1757409766:build
 
-FROM ${BUILDER_IMAGE} as builder
+FROM ${BUILDER_IMAGE} AS builder
 
 # Copy source code
 COPY --chown=dev:dev . /work
