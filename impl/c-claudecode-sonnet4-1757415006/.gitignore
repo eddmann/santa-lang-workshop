@@ -1,0 +1,23 @@
+# Compiled objects and executables
+*.o
+*.so
+*.a
+elf-lang
+
+# Build artifacts
+build/
+dist/
+
+# Temporary test files (required)
+/tmp/
+
+# Debug files
+*.gdb
+core
+vgcore.*
+
+# IDE and editor files
+.vscode/
+*.swp
+*.swo
+*~

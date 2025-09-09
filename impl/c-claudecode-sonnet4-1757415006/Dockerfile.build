@@ -1,0 +1,15 @@
+FROM gcc:15
+
+RUN groupadd -r dev && useradd -r -g dev dev
+
+RUN apt-get update && apt-get install -y \
+    make \
+    valgrind \
+    gdb \
+    && rm -rf /var/lib/apt/lists/*
+
+USER dev
+WORKDIR /work
+
+ENV CC=gcc-15
+ENV CFLAGS="-std=c23 -Wall -Wextra -O2"

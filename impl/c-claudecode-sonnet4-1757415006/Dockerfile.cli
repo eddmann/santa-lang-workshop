@@ -1,0 +1,11 @@
+ARG BUILDER_IMAGE=local/santa-c-claudecode-sonnet4-1757415006:build
+FROM ${BUILDER_IMAGE} AS builder
+
+COPY . /work/
+RUN make -f build.mk clean && make -f build.mk
+
+FROM gcr.io/distroless/cc-debian12
+
+COPY --from=builder /work/elf-lang /usr/local/bin/elf-lang
+
+ENTRYPOINT ["/usr/local/bin/elf-lang"]
