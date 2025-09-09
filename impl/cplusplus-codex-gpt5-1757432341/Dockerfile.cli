@@ -1,0 +1,23 @@
+ARG BUILDER_IMAGE=local/santa-cplusplus-codex-gpt5-1757432341:build
+FROM ${BUILDER_IMAGE} AS build
+
+WORKDIR /work/impl/cplusplus-codex-gpt5-1757432341
+
+# Copy source
+COPY . /work/impl/cplusplus-codex-gpt5-1757432341
+
+# Build the CLI binary
+RUN mkdir -p /work/out && \
+    g++ -std=gnu++23 -O2 -pipe -static-libstdc++ -static-libgcc \
+        -o /work/out/elf \
+        src/main.cpp
+
+FROM ${BUILDER_IMAGE} AS runtime
+
+WORKDIR /work
+COPY --from=build /work/out/elf /usr/local/bin/elf
+
+# Use the pre-created non-root user from builder
+USER builder
+
+ENTRYPOINT ["/usr/local/bin/elf"]

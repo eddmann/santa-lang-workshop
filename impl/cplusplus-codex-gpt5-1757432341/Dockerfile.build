@@ -1,0 +1,15 @@
+FROM gcc:15
+
+# Create non-root user and workspace
+RUN useradd -m -u 1000 -s /bin/bash builder || true \
+    && mkdir -p /work \
+    && chown -R 1000:1000 /work
+
+WORKDIR /work
+USER builder
+
+SHELL ["/bin/bash", "-lc"]
+
+# Ensure compiler is available on PATH explicitly
+ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+

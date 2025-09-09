@@ -1,0 +1,12 @@
+# Build artifacts
+out/
+build/
+
+# Local temp tests or scratch
+tmp/
+
+# Editor/OS
+.DS_Store
+*.swp
+*.swo
+*.tmp

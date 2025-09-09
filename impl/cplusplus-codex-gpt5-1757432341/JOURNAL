@@ -1,0 +1,42 @@
+{
+  "author": "Template Tinseltoes",
+  "details": {
+    "language": "C++",
+    "model": "GPT-5",
+    "harness": "Codex",
+    "requirements": "Ensure use of C++23 standard and GCC 15+"
+  },
+  "progress": {
+    "stage-1": "complete",
+    "stage-2": "complete",
+    "stage-3": "complete",
+    "stage-4": "complete",
+    "stage-5": "complete"
+  },
+  "journal": [
+    {
+      "written_at": "2025-09-09T15:42:28Z",
+      "entry": "Kickoff: Implement elf-lang in C++ under ./impl/cplusplus-codex-gpt5-1757432341. Initial focus: Dockerized developer tooling setup and CLI skeleton. To resume: make -C ./impl/cplusplus-codex-gpt5-1757432341 build-image && make -C ./impl/cplusplus-codex-gpt5-1757432341 cli-image"
+    },
+    {
+      "written_at": "2025-09-09T15:45:14Z",
+      "entry": "Developer tooling scaffolded: Dockerfile.build, Dockerfile.cli, .gitignore, and a stage-1 lexer CLI (tokens). Built via: make -C ./impl/cplusplus-codex-gpt5-1757432341 build-image && make -C ./impl/cplusplus-codex-gpt5-1757432341 cli-image"
+    },
+    {
+      "written_at": "2025-09-09T16:09:18Z",
+      "entry": "Stage 2 complete: parser+AST added; tests green via make test-stage-1 and test-stage-2."
+    },
+    {
+      "written_at": "2025-09-09T16:23:11Z",
+      "entry": "Stage 3 in-progress: Implemented evaluator runtime in C++. Added Value type, env, built-ins (puts, +, -, *, /); truthiness for && and ||; program prints last non-comment expression; string repr uses raw quotes; decimal printing uses precision(16). Commands: make -C ./impl/cplusplus-codex-gpt5-1757432341 cli-image; make -C ./impl/cplusplus-codex-gpt5-1757432341 test-stage-3"
+    },
+    {
+      "written_at": "2025-09-09T16:40:52Z",
+      "entry": "All stages complete. 57/57 tests passing. Implemented stage-4 collections (List/Set/Dict) with indexing, built-ins (push, assoc, size, first, rest), collection + operations, and structural equality. Implemented stage-5 functions: closures with lexical scoping by reference, partial application, built-in higher-order functions (map, filter, fold), operator functions as first-class (+,-,*,/), function composition (>>) and threading (|>) semantics, comparisons (>,<,>=,<=) for numerics, and If expression evaluation. Commands to run: make -C ./impl/cplusplus-codex-gpt5-1757432341 test; single stage: make -C ./impl/cplusplus-codex-gpt5-1757432341 test-stage-N; single file: make -C ./impl/cplusplus-codex-gpt5-1757432341 test-file FILE=tests/stage-N/<name>"
+    },
+    {
+      "written_at": "2025-09-09T16:42:51Z",
+      "entry": "Verified via Docker: images built and all tests passing (57/57). Commands: make -C ./impl/cplusplus-codex-gpt5-1757432341 cli-image; make -C ./impl/cplusplus-codex-gpt5-1757432341 test"
+    }
+  ]
+}
