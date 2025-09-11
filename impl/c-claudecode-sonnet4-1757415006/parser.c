@@ -529,9 +529,16 @@ static ASTNode *parse_function_composition(Parser *parser, ASTNode *left) {
     // Add the left side function
     ast_node_list_append(node->data.function_composition.functions, left);
     
-    // Parse all composed functions using >> operator
+    // Consume the first >> token that was detected in parse_precedence
+    advance(parser);
+    
+    // Parse the right side of the first composition
+    ASTNode *right = parse_precedence(parser, (Precedence)(PREC_COMPOSE + 1));
+    ast_node_list_append(node->data.function_composition.functions, right);
+    
+    // Parse any additional composed functions using >> operator
     while (match(parser, TOK_GT_GT)) {
-        ASTNode *right = parse_precedence(parser, (Precedence)(PREC_COMPOSE + 1));
+        right = parse_precedence(parser, (Precedence)(PREC_COMPOSE + 1));
         ast_node_list_append(node->data.function_composition.functions, right);
     }
     
@@ -543,9 +550,16 @@ static ASTNode *parse_function_thread(Parser *parser, ASTNode *left) {
     node->data.function_thread.initial = left;
     node->data.function_thread.functions = ast_node_list_create();
     
-    // Parse all threaded functions using |> operator
+    // Consume the first |> token that was detected in parse_precedence
+    advance(parser);
+    
+    // Parse the right side of the first thread
+    ASTNode *right = parse_precedence(parser, (Precedence)(PREC_PIPE + 1));
+    ast_node_list_append(node->data.function_thread.functions, right);
+    
+    // Parse any additional threaded functions using |> operator
     while (match(parser, TOK_PIPE_GT)) {
-        ASTNode *right = parse_precedence(parser, (Precedence)(PREC_PIPE + 1));
+        right = parse_precedence(parser, (Precedence)(PREC_PIPE + 1));
         ast_node_list_append(node->data.function_thread.functions, right);
     }
     
@@ -953,6 +967,19 @@ static void print_ast_json_internal(ASTNode *node, int indent) {
             printf(",\n");
             print_indent(indent + 1);
             printf("\"type\": \"Call\"\n");
+            break;
+            
+        case AST_ASSIGNMENT:
+            print_indent(indent + 1);
+            printf("\"name\": ");
+            print_ast_json_internal(node->data.assignment.target, indent + 1);
+            printf(",\n");
+            print_indent(indent + 1);
+            printf("\"type\": \"Assignment\",\n");
+            print_indent(indent + 1);
+            printf("\"value\": ");
+            print_ast_json_internal(node->data.assignment.value, indent + 1);
+            printf("\n");
             break;
             
         case AST_STATEMENT_EXPRESSION:

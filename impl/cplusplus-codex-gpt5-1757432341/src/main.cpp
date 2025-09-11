@@ -365,7 +365,7 @@ struct AssignExpr : Expr {
     w.out << "{\n";
     w.indent += 2;
     w.write_indent(); w.out << "\"name\": "; name.write(w); w.out << ",\n";
-    w.write_indent(); w.out << "\"type\": \"Assign\",\n";
+    w.write_indent(); w.out << "\"type\": \"Assignment\",\n";
     w.write_indent(); w.out << "\"value\": "; value->write(w); w.out << "\n";
     w.indent -= 2; w.write_indent(); w.out << "}";
   }

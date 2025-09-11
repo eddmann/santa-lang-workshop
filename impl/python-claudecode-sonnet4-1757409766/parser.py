@@ -89,8 +89,8 @@ class Parser:
             return {
                 "type": "Expression",
                 "value": {
-                    "type": "Assignment",
                     "name": name,
+                    "type": "Assignment",
                     "value": value
                 }
             }

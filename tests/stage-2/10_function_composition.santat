@@ -1,7 +1,8 @@
 --TEST--
 parser: function_composition
 --FILE--
-let inc_double = inc >> double;
+let mut inc_double = inc >> double;
+inc_double = +(1) >> *(2);
 [1, 2, 3, 4, 5] |> map(|x| x + 1) |> filter(|x| x > 2) |> inc_double;
 --EXPECT_AST--
 {
@@ -13,7 +14,7 @@ let inc_double = inc >> double;
           "name": "inc_double",
           "type": "Identifier"
         },
-        "type": "Let",
+        "type": "MutableLet",
         "value": {
           "functions": [
             {
@@ -23,6 +24,47 @@ let inc_double = inc >> double;
             {
               "name": "double",
               "type": "Identifier"
+            }
+          ],
+          "type": "FunctionComposition"
+        }
+      }
+    },
+    {
+      "type": "Expression",
+      "value": {
+        "name": {
+          "name": "inc_double",
+          "type": "Identifier"
+        },
+        "type": "Assignment",
+        "value": {
+          "functions": [
+            {
+              "arguments": [
+                {
+                  "type": "Integer",
+                  "value": "1"
+                }
+              ],
+              "function": {
+                "name": "+",
+                "type": "Identifier"
+              },
+              "type": "Call"
+            },
+            {
+              "arguments": [
+                {
+                  "type": "Integer",
+                  "value": "2"
+                }
+              ],
+              "function": {
+                "name": "*",
+                "type": "Identifier"
+              },
+              "type": "Call"
             }
           ],
           "type": "FunctionComposition"

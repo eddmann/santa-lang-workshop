@@ -98,7 +98,7 @@ func (p *Parser) parseExpression(minPrec int) Expr {
             if id, ok := left.(Identifier); ok {
                 p.next()
                 right := p.parseExpression(precLowest)
-                left = AssignExpr{Name: id, Type: "Assign", Value: right}
+                left = AssignExpr{Name: id, Type: "Assignment", Value: right}
                 continue
             }
             break
