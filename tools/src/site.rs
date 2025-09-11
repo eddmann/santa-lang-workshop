@@ -302,7 +302,11 @@ fn layout_with_base(title: &str, body: &str, base_path: &str) -> String {
       }});
     }}
   }})();
-  if (window.hljs && window.hljs.highlightAll) {{ window.hljs.highlightAll(); }}
+  if (window.hljs) {{ 
+    window.hljs.highlightAll(); 
+    // Configure hljs for better language detection
+    window.hljs.configure({{ignoreUnescapedHTML: true}});
+  }}
 </script>"#, body),
         logo = logo_src,
         home = home_href,
@@ -782,12 +786,31 @@ fn render_impl(imp: &ImplInfo, tree: &BTreeMap<String, String>, base_path: &str)
       case 'go': return 'go';
       case 'js': return 'javascript';
       case 'ts': return 'typescript';
+      case 'jsx': return 'jsx';
+      case 'tsx': return 'tsx';
       case 'json': return 'json';
       case 'md': return 'markdown';
       case 'c': return 'c';
-      case 'h': return 'c';
+      case 'cpp': case 'cc': case 'cxx': return 'cpp';
+      case 'h': case 'hpp': return 'c';
+      case 'java': return 'java';
+      case 'kt': return 'kotlin';
+      case 'swift': return 'swift';
+      case 'rb': return 'ruby';
+      case 'php': return 'php';
+      case 'sh': case 'bash': return 'bash';
+      case 'ps1': return 'powershell';
+      case 'xml': case 'html': return 'xml';
+      case 'css': return 'css';
+      case 'scss': case 'sass': return 'scss';
+      case 'yaml': case 'yml': return 'yaml';
+      case 'toml': return 'toml';
+      case 'dockerfile': return 'dockerfile';
+      case 'sql': return 'sql';
       case 'txt': return 'plaintext';
-      case 'santa': return 'plaintext';
+      case 'santa': case 'santat': return 'plaintext';
+      case 'makefile': case 'mk': return 'makefile';
+      case '': return (name.toLowerCase() === 'makefile' || name.toLowerCase() === 'dockerfile') ? name.toLowerCase() : 'plaintext';
       default: return 'plaintext';
     }}
   }}
@@ -804,8 +827,19 @@ fn render_impl(imp: &ImplInfo, tree: &BTreeMap<String, String>, base_path: &str)
       btn.classList.toggle('bg-white/10', isActive);
       btn.classList.toggle('text-white', isActive);
     }});
-    // Re-highlight
-    if (window.hljs && window.hljs.highlightElement) {{ window.hljs.highlightElement(code); }}
+    // Reset scroll position to top
+    const codeContainer = code.closest('pre');
+    if (codeContainer) {{
+      codeContainer.scrollTop = 0;
+    }}
+    
+    // Re-highlight with proper language detection
+    if (window.hljs) {{ 
+      // Clear previous highlighting
+      code.removeAttribute('data-highlighted');
+      // Apply new highlighting
+      window.hljs.highlightElement(code); 
+    }}
   }}
   document.querySelectorAll('[data-file]').forEach(btn => {{
     btn.addEventListener('click', () => {{
@@ -844,7 +878,15 @@ fn render_impl(imp: &ImplInfo, tree: &BTreeMap<String, String>, base_path: &str)
       setTimeout(() => copyBtn.textContent = 'Copy', 1200);
     }}
   }});
+  // Initialize with first file and ensure highlighting
   setFile({init_name});
+  
+  // Ensure initial highlighting is applied after page load
+  setTimeout(() => {{
+    if (window.hljs) {{
+      window.hljs.highlightAll();
+    }}
+  }}, 100);
 </script>"#,
         sidebar = files_sidebar,
         fname = html_escape::encode_text(&initial_file.0),
@@ -873,8 +915,15 @@ fn render_impl(imp: &ImplInfo, tree: &BTreeMap<String, String>, base_path: &str)
     if (which === 'journal') {{ j.style.display = ''; c.style.display = 'none'; tabs[0].classList.add('tab-active'); }}
     else {{ j.style.display = 'none'; c.style.display = ''; tabs[1].classList.add('tab-active'); }}
     // Re-run syntax highlighting when switching tabs
-    if (window.hljs && window.hljs.highlightAll) {{
-      window.hljs.highlightAll();
+    if (window.hljs) {{
+      // Re-highlight all code blocks in the current tab
+      setTimeout(() => {{
+        const visibleCodeBlocks = document.querySelectorAll('#tab-code:not([style*=\"display: none\"]) code[class*=\"language-\"], #tab-journal:not([style*=\"display: none\"]) code[class*=\"language-\"]');
+        visibleCodeBlocks.forEach(block => {{
+          block.removeAttribute('data-highlighted');
+          window.hljs.highlightElement(block);
+        }});
+      }}, 10);
     }}
   }}
   document.querySelectorAll('.tab').forEach(b => {{
