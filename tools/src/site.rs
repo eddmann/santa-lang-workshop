@@ -192,6 +192,7 @@ fn tailwind_head() -> String {
   @media (min-width: 1024px) { .sticky-toc { position: sticky; top: calc(var(--header-h) + 1rem); } }
   .snow2 { opacity: .18; animation-duration: 45s; background-size: 300px 300px; }
   @keyframes snow { from { background-position: 0 0, 0 0, 0 0, 0 0, 0 0; } to { background-position: 0 1000px, 0 800px, 0 600px, 0 400px, 0 200px; } }
+  .rotate-180 { transform: rotate(180deg); }
 </style>"#
         .to_string()
 }
@@ -732,7 +733,7 @@ fn render_impl(imp: &ImplInfo, tree: &BTreeMap<String, String>, base_path: &str)
     for (rel, _) in tree {
         if first_file.is_none() { first_file = Some((rel.as_str(), tree.get(rel).unwrap())); }
         files_sidebar.push_str(&format!(
-            r#"<button class="w-full text-left px-3 py-1.5 rounded hover:bg-white/10 code text-xs" data-file="{}">{}</button>"#,
+            r#"<button class="w-full text-left px-3 py-2 lg:py-1.5 rounded hover:bg-white/10 code text-xs sm:text-sm" data-file="{}">{}</button>"#,
             html_escape::encode_text(rel),
             html_escape::encode_text(rel)
         ));
@@ -741,16 +742,34 @@ fn render_impl(imp: &ImplInfo, tree: &BTreeMap<String, String>, base_path: &str)
     let initial_file = first_file.map(|(r, c)| (r.to_string(), c.clone())).unwrap_or((String::new(), String::new()));
 
     let code_browser = format!(
-        r#"<div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
-  <aside class="paper-dark rounded-lg p-3 border border-white/10 lg:col-span-1 max-h-[60vh] overflow-auto">
+        r#"<div class="space-y-4 lg:space-y-0 lg:grid lg:grid-cols-4 lg:gap-4">
+  <!-- Mobile: Files dropdown, Desktop: Sidebar -->
+  <div class="lg:hidden">
+    <div class="paper-dark rounded-lg border border-white/10">
+      <button id="mobile-file-toggle" class="w-full px-4 py-3 text-left flex items-center justify-between text-white/80 hover:text-white" aria-expanded="false" aria-controls="mobile-file-list">
+        <span class="text-sm font-medium">Files</span>
+        <svg class="w-4 h-4 transform transition-transform" id="mobile-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+      </button>
+      <div id="mobile-file-list" class="hidden border-t border-white/10 max-h-60 overflow-auto">
+        <div class="p-2 space-y-1">
+          {sidebar}
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <aside class="hidden lg:block paper-dark rounded-lg p-3 border border-white/10 lg:col-span-1 max-h-[60vh] overflow-auto">
     {sidebar}
   </aside>
+  
   <section class="paper-dark rounded-lg p-0 border border-white/10 lg:col-span-3 overflow-hidden">
-    <div class="px-4 py-2 text-xs text-white/60 border-b border-white/10 bg-black/30 flex items-center justify-between">
-      <span id="code-filename">{fname}</span>
-      <button id="copy-code" class="px-2 py-1 rounded bg-white/10 hover:bg-white/20 text-white/80">Copy</button>
+    <div class="px-3 sm:px-4 py-2 text-xs text-white/60 border-b border-white/10 bg-black/30 flex items-center justify-between">
+      <span id="code-filename" class="truncate mr-2 text-xs sm:text-sm">{fname}</span>
+      <button id="copy-code" class="px-2 py-1 rounded bg-white/10 hover:bg-white/20 text-white/80 text-xs sm:text-sm flex-shrink-0">Copy</button>
     </div>
-    <pre class="code text-sm p-4 overflow-auto max-h-[60vh] bg-black/30"><code id="code-content" class="hljs">{content}</code></pre>
+    <pre class="code text-xs sm:text-sm p-3 sm:p-4 overflow-auto max-h-[50vh] sm:max-h-[60vh] bg-black/30"><code id="code-content" class="hljs">{content}</code></pre>
   </section>
 </div>
 <script>
@@ -789,8 +808,31 @@ fn render_impl(imp: &ImplInfo, tree: &BTreeMap<String, String>, base_path: &str)
     if (window.hljs && window.hljs.highlightElement) {{ window.hljs.highlightElement(code); }}
   }}
   document.querySelectorAll('[data-file]').forEach(btn => {{
-    btn.addEventListener('click', () => setFile(btn.getAttribute('data-file')));
+    btn.addEventListener('click', () => {{
+      setFile(btn.getAttribute('data-file'));
+      // Close mobile file list after selection
+      const mobileList = document.getElementById('mobile-file-list');
+      const mobileToggle = document.getElementById('mobile-file-toggle');
+      const chevron = document.getElementById('mobile-chevron');
+      if (mobileList && mobileToggle && chevron) {{
+        mobileList.classList.add('hidden');
+        mobileToggle.setAttribute('aria-expanded', 'false');
+        chevron.classList.remove('rotate-180');
+      }}
+    }});
   }});
+  
+  // Mobile file toggle
+  const mobileToggle = document.getElementById('mobile-file-toggle');
+  const mobileList = document.getElementById('mobile-file-list');
+  const chevron = document.getElementById('mobile-chevron');
+  mobileToggle?.addEventListener('click', () => {{
+    const isOpen = !mobileList.classList.contains('hidden');
+    mobileList.classList.toggle('hidden');
+    mobileToggle.setAttribute('aria-expanded', String(!isOpen));
+    chevron.classList.toggle('rotate-180');
+  }});
+  
   const copyBtn = document.getElementById('copy-code');
   copyBtn?.addEventListener('click', async () => {{
     try {{
@@ -814,9 +856,9 @@ fn render_impl(imp: &ImplInfo, tree: &BTreeMap<String, String>, base_path: &str)
     let tabs = format!(
         r###"<div class="mt-6 mb-4">
   <div class="w-full rounded-full bg-white/10 backdrop-blur border border-white/15 p-1">
-    <div class="grid grid-cols-2 gap-3">
-      <button type="button" class="tab tab-active w-full text-center" data-tab="journal">Journal</button>
-      <button type="button" class="tab w-full text-center" data-tab="code">Code</button>
+    <div class="grid grid-cols-2 gap-1 sm:gap-3">
+      <button type="button" class="tab tab-active w-full text-center text-sm sm:text-base py-2 sm:py-3" data-tab="journal">Journal</button>
+      <button type="button" class="tab w-full text-center text-sm sm:text-base py-2 sm:py-3" data-tab="code">Code</button>
     </div>
   </div>
 </div>
@@ -852,19 +894,19 @@ fn render_impl(imp: &ImplInfo, tree: &BTreeMap<String, String>, base_path: &str)
     let header_img_src = if imp.elf_png_path.is_some() { "elf.png".to_string() } else { base_url(base_path, "unknown-elf.png") };
 
     let header = format!(
-        r#"<div class="flex items-center gap-5">
-  <div class="w-20 h-20 rounded-xl overflow-hidden bg-black/30 border border-white/10">
+        r#"<div class="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-5">
+  <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden bg-black/30 border border-white/10 mx-auto sm:mx-0">
     <img class="w-full h-full object-cover" src="{img}" alt="Elf">
   </div>
-  <div>
-    <h1 class="text-2xl font-semibold">{author}</h1>
-    <div class="mt-2 flex gap-2 text-xs">
+  <div class="text-center sm:text-left flex-1">
+    <h1 class="text-xl sm:text-2xl font-semibold">{author}</h1>
+    <div class="mt-2 flex flex-wrap justify-center sm:justify-start gap-2 text-xs">
       <span class="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-300/20">{lang}</span>
       <span class="px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-300 border border-rose-300/20">{harness}</span>
       <span class="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-300/20">{model}</span>
     </div>
   </div>
-  <a class="ml-auto text-sm px-3 py-1 rounded bg-white/10 hover:bg-white/20 text-white/80 border border-white/10" href="{gh}" target="_blank" rel="noopener noreferrer">View on GitHub</a>
+  <a class="text-sm px-3 py-2 rounded bg-white/10 hover:bg-white/20 text-white/80 border border-white/10 text-center sm:ml-auto" href="{gh}" target="_blank" rel="noopener noreferrer">View on GitHub</a>
 </div>"#,
         author = html_escape::encode_text(author),
         lang = html_escape::encode_text(&imp.journal.details.language),
