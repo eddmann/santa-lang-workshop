@@ -942,6 +942,34 @@ fn render_impl(imp: &ImplInfo, tree: &BTreeMap<String, String>, base_path: &str)
 
     let header_img_src = if imp.elf_png_path.is_some() { "elf.png".to_string() } else { base_url(base_path, "unknown-elf.png") };
 
+    let badges_html = vec![
+        format!("<span class=\"px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-300/20\">{}</span>", html_escape::encode_text(&imp.journal.details.language)),
+        format!("<span class=\"px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-300 border border-rose-300/20\">{}</span>", html_escape::encode_text(&imp.journal.details.harness)),
+        format!("<span class=\"px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-300/20\">{}</span>", html_escape::encode_text(&imp.journal.details.model)),
+    ].join("\n      ");
+    
+    // Requirements section if present
+    let requirements_section = if !imp.journal.details.requirements.trim().is_empty() {
+        format!(
+            r#"<div class="mt-6 paper-dark rounded-xl p-5 border border-white/10">
+  <div class="flex items-start gap-3">
+    <div class="w-8 h-8 rounded-full bg-blue-500/20 border border-blue-400/30 flex items-center justify-center flex-shrink-0 mt-0.5">
+      <svg class="w-4 h-4 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+    </div>
+    <div>
+      <h3 class="text-sm font-semibold text-blue-300 mb-2">Requirements</h3>
+      <p class="text-sm text-white/75 leading-relaxed">{requirements}</p>
+    </div>
+  </div>
+</div>"#,
+            requirements = html_escape::encode_text(&imp.journal.details.requirements)
+        )
+    } else {
+        String::new()
+    };
+
     let header = format!(
         r#"<div class="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-5">
   <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden bg-black/30 border border-white/10 mx-auto sm:mx-0">
@@ -950,19 +978,16 @@ fn render_impl(imp: &ImplInfo, tree: &BTreeMap<String, String>, base_path: &str)
   <div class="text-center sm:text-left flex-1">
     <h1 class="text-xl sm:text-2xl font-semibold">{author}</h1>
     <div class="mt-2 flex flex-wrap justify-center sm:justify-start gap-2 text-xs">
-      <span class="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-300/20">{lang}</span>
-      <span class="px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-300 border border-rose-300/20">{harness}</span>
-      <span class="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-300/20">{model}</span>
+      {badges}
     </div>
   </div>
   <a class="text-sm px-3 py-2 rounded bg-white/10 hover:bg-white/20 text-white/80 border border-white/10 text-center sm:ml-auto" href="{gh}" target="_blank" rel="noopener noreferrer">View on GitHub</a>
-</div>"#,
+</div>{requirements}"#,
         author = html_escape::encode_text(author),
-        lang = html_escape::encode_text(&imp.journal.details.language),
-        harness = html_escape::encode_text(&imp.journal.details.harness),
-        model = html_escape::encode_text(&imp.journal.details.model),
+        badges = badges_html,
         gh = gh_url,
-        img = header_img_src
+        img = header_img_src,
+        requirements = requirements_section
     );
 
     layout_impl(&format!("{} – {}", imp.journal.details.language, author), &format!("{}{}", header, tabs), base_path)
