@@ -189,7 +189,7 @@ fn tailwind_head() -> String {
     background-size: 200px 200px;
     animation: snow 25s linear infinite;
   }
-  .sticky-toc { position: sticky; top: var(--header-h); }
+  @media (min-width: 1024px) { .sticky-toc { position: sticky; top: calc(var(--header-h) + 1rem); } }
   .snow2 { opacity: .18; animation-duration: 45s; background-size: 300px 300px; }
   @keyframes snow { from { background-position: 0 0, 0 0, 0 0, 0 0, 0 0; } to { background-position: 0 1000px, 0 800px, 0 600px, 0 400px, 0 200px; } }
 </style>"#
@@ -244,11 +244,28 @@ fn layout_with_base(title: &str, body: &str, base_path: &str) -> String {
       </div>
     </div>
   </header>
-  <div id="mobile-nav" class="md:hidden px-6 md:px-10 py-2 border-b border-white/10 bg-black/40" style="display:none">
-    <a class="block py-2 text-white/80 hover:text-white text-sm leading-none" href="{home}">Home</a>
-    <a class="block py-2 text-white/80 hover:text-white text-sm leading-none" href="{lang}">Language</a>
-    <a class="block py-2 text-white/80 hover:text-white text-sm leading-none" href="{tasks}">Tasks</a>
-    <a class="block py-2 text-white/80 hover:text-white text-sm leading-none" href="https://github.com/eddmann/santa-lang-workshop" target="_blank" rel="noopener noreferrer">GitHub</a>
+  <div id="mobile-nav" class="md:hidden px-6 md:px-10 py-4 bg-gradient-to-b from-black/95 to-black/90 backdrop-blur-xl fixed left-0 right-0 z-40 shadow-2xl border-t border-white/10" style="display:none">
+    <nav class="space-y-1">
+      <a class="flex items-center py-3 px-4 rounded-lg text-white/80 hover:text-white hover:bg-white/10 text-sm font-medium transition-all duration-200 hover:translate-x-1 group" href="{home}">
+        <div class="w-2 h-2 rounded-full bg-emerald-400 mr-3 group-hover:bg-emerald-300 transition-colors"></div>
+        Home
+      </a>
+      <a class="flex items-center py-3 px-4 rounded-lg text-white/80 hover:text-white hover:bg-white/10 text-sm font-medium transition-all duration-200 hover:translate-x-1 group" href="{lang}">
+        <div class="w-2 h-2 rounded-full bg-blue-400 mr-3 group-hover:bg-blue-300 transition-colors"></div>
+        Language
+      </a>
+      <a class="flex items-center py-3 px-4 rounded-lg text-white/80 hover:text-white hover:bg-white/10 text-sm font-medium transition-all duration-200 hover:translate-x-1 group" href="{tasks}">
+        <div class="w-2 h-2 rounded-full bg-amber-400 mr-3 group-hover:bg-amber-300 transition-colors"></div>
+        Tasks
+      </a>
+      <a class="flex items-center py-3 px-4 rounded-lg text-white/80 hover:text-white hover:bg-white/10 text-sm font-medium transition-all duration-200 hover:translate-x-1 group" href="https://github.com/eddmann/santa-lang-workshop" target="_blank" rel="noopener noreferrer">
+        <div class="w-2 h-2 rounded-full bg-purple-400 mr-3 group-hover:bg-purple-300 transition-colors"></div>
+        GitHub
+        <svg class="w-3 h-3 ml-auto opacity-60 group-hover:opacity-100 transition-opacity" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+        </svg>
+      </a>
+    </nav>
   </div>
   <main class="max-w-7xl mx-auto px-6 md:px-10 py-10 relative z-0">
     {}
@@ -264,10 +281,23 @@ fn layout_with_base(title: &str, body: &str, base_path: &str) -> String {
     const btn = document.getElementById('nav-toggle');
     const menu = document.getElementById('mobile-nav');
     if (btn && menu) {{
+      menu.style.maxHeight = '0';
+      menu.style.overflow = 'hidden';
+      menu.style.display = 'block';
+      menu.style.transition = 'max-height 0.3s ease-out, opacity 0.2s ease-out';
+      menu.style.opacity = '0';
+      
       btn.addEventListener('click', function() {{
-        const isOpen = menu.style.display !== 'none';
-        menu.style.display = isOpen ? 'none' : '';
-        btn.setAttribute('aria-expanded', String(!isOpen));
+        const isOpen = menu.style.maxHeight !== '0px' && menu.style.maxHeight !== '';
+        if (isOpen) {{
+          menu.style.maxHeight = '0';
+          menu.style.opacity = '0';
+          btn.setAttribute('aria-expanded', 'false');
+        }} else {{
+          menu.style.maxHeight = '400px';
+          menu.style.opacity = '1';
+          btn.setAttribute('aria-expanded', 'true');
+        }}
       }});
     }}
   }})();
