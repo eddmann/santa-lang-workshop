@@ -1,0 +1,24 @@
+ARG BUILDER_IMAGE=local/santa-elixir-claudecode-sonnet4-1757661572:build
+
+# Build stage
+FROM ${BUILDER_IMAGE} as builder
+
+# Copy source and build
+COPY --chown=dev:dev . /work/
+RUN mix deps.get && \
+    mix deps.compile && \
+    mix compile && \
+    mix escript.build
+
+# Runtime stage
+FROM elixir:1.18-alpine
+
+# Just add basic packages
+RUN apk add --no-cache \
+    ncurses-libs
+
+# Copy the escript binary
+COPY --from=builder /work/elf_lang /usr/local/bin/elf_lang
+
+# Set entrypoint to the CLI
+ENTRYPOINT ["/usr/local/bin/elf_lang"]

@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Local CLI wrapper (optional for convenience; tests use Docker)
+cd "$(dirname "$0")"
+./elf_lang "$@"

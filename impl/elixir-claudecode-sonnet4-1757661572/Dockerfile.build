@@ -1,0 +1,21 @@
+FROM elixir:1.18-alpine
+
+# Install system dependencies
+RUN apk add --no-cache \
+    build-base \
+    git \
+    bash
+
+# Create non-root user
+RUN adduser -D -s /bin/bash dev
+USER dev
+
+# Set working directory
+WORKDIR /work
+
+# Set up Hex and Rebar
+RUN mix local.hex --force && \
+    mix local.rebar --force
+
+# Default shell
+CMD ["bash"]
