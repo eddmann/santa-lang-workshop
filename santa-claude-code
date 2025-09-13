@@ -1,0 +1,91 @@
+#!/bin/bash
+
+# santa-claude-code - Keep the elf (LLM agent) at the workbench until implementation is complete
+# Usage: ./santa-claude-code <impl_directory>
+
+set -e
+
+# Check if implementation directory is provided
+if [ $# -ne 1 ]; then
+    echo "Usage: $0 <impl_directory>"
+    echo "Example: $0 impl/python-claudecode-sonnet4-1757409766"
+    exit 1
+fi
+
+IMPL_DIR="$1"
+
+# Check if the implementation directory exists
+if [ ! -d "$IMPL_DIR" ]; then
+    echo "Error: Implementation directory '$IMPL_DIR' does not exist"
+    exit 1
+fi
+
+# Check if TASKS.md exists in the implementation directory
+TASKS_FILE="$IMPL_DIR/TASKS.md"
+if [ ! -f "$TASKS_FILE" ]; then
+    echo "Error: TASKS.md not found in '$IMPL_DIR'"
+    exit 1
+fi
+
+# Check if santa-journal tool exists
+JOURNAL_TOOL="tools/bin/santa-journal"
+if [ ! -f "$JOURNAL_TOOL" ]; then
+    echo "Error: santa-journal tool not found at '$JOURNAL_TOOL'"
+    exit 1
+fi
+
+echo "Putting the elf to work at the workbench: $IMPL_DIR"
+echo "Task list: $TASKS_FILE"
+echo ""
+
+# Function to check if the elf has finished all work at the workbench
+check_progress() {
+    local progress_output
+    progress_output=$("$JOURNAL_TOOL" --dir "$IMPL_DIR" progress 2>&1)
+    echo "Checking workbench progress:"
+    echo "$progress_output"
+    echo ""
+
+    # Check if the elf still has work to do
+    # Look for 'not-started' and 'in-progress' statuses that indicate more work needed
+    if echo "$progress_output" | grep -q "not-started\|in-progress"; then
+        return 1  # Elf still has work to do
+    else
+        return 0  # Elf has completed all work
+    fi
+}
+
+# Function to put the elf to work at the workbench
+run_claude_command() {
+    echo "Elf is working at the workbench..."
+    echo "Command: claude --dangerously-skip-permissions --output-format=stream-json --print --verbose \"@$TASKS_FILE\""
+    echo ""
+
+    claude --dangerously-skip-permissions --output-format=stream-json --print --verbose "@$TASKS_FILE" | jq '.'
+
+    echo ""
+    echo "Elf finished this round of work."
+    echo ""
+}
+
+# Keep the elf working until all tasks are complete
+iteration=1
+while true; do
+    echo "=== Work Session $iteration ==="
+
+    # Put the elf to work at the workbench
+    run_claude_command
+
+    # Check if the elf has finished all work
+    if check_progress; then
+        echo "🎉 Elf has completed all work at the workbench! Time to rest."
+        break
+    else
+        echo "Elf still has work to do. Back to the workbench..."
+        echo ""
+        iteration=$((iteration + 1))
+    fi
+done
+
+echo ""
+echo "Elf has finished all work successfully! 🎄"
