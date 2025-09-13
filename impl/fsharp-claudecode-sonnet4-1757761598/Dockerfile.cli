@@ -1,0 +1,21 @@
+ARG BUILDER_IMAGE=local/santa-fsharp-claudecode-sonnet4-1757761598:build
+
+# Build stage
+FROM ${BUILDER_IMAGE} AS builder
+
+# Copy source files
+COPY --chown=dev:dev . /work/impl/fsharp-claudecode-sonnet4-1757761598/
+
+# Build the application
+WORKDIR /work/impl/fsharp-claudecode-sonnet4-1757761598
+RUN dotnet publish --configuration Release --output /work/bin
+
+# Runtime stage
+FROM mcr.microsoft.com/dotnet/runtime:9.0
+
+# Copy the built application
+COPY --from=builder /work/bin /app
+
+# Set entrypoint
+WORKDIR /work
+ENTRYPOINT ["/app/elf-lang"]
