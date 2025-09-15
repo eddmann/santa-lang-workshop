@@ -1,0 +1,28 @@
+ARG BUILDER_IMAGE
+FROM ${BUILDER_IMAGE} AS build
+
+WORKDIR /work/impl/haskell-codex-gpt5-1757943619
+
+# Copy source
+COPY . /work/impl/haskell-codex-gpt5-1757943619
+
+# Build the CLI using cabal and install the binary into /work/out
+RUN mkdir -p /work/out && \
+    GHC_BIN_DIR=$(ls -d /opt/ghc/*/bin | head -n1) && \
+    export PATH="$GHC_BIN_DIR:$PATH" && \
+    cabal update && \
+    cabal install exe:elf --installdir /work/out --install-method=copy --overwrite-policy=always
+
+FROM debian:bookworm-slim
+
+WORKDIR /work
+COPY --from=build /work/out/elf /usr/local/bin/elf
+
+# Runtime dependencies for GHC-built binaries
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends libgmp10 ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN useradd -m -u 1000 runner || true
+USER runner
+ENTRYPOINT ["/usr/local/bin/elf"]

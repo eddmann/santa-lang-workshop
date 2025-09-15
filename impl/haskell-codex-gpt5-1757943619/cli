@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Convenience runner for the dockerized CLI
+ROOT_DIR="$(cd "$(dirname "$0")/../.." && pwd)"
+IMPL_DIR="$ROOT_DIR/impl/haskell-codex-gpt5-1757943619"
+
+make -C "$IMPL_DIR" run ARGS="$*"
+

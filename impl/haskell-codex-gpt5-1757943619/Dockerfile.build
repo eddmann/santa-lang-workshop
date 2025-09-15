@@ -1,0 +1,15 @@
+FROM haskell:9
+
+# Create non-root user and workspace
+RUN useradd -m -u 1000 -s /bin/bash builder || true \
+    && mkdir -p /work \
+    && chown -R 1000:1000 /work
+
+WORKDIR /work
+USER builder
+
+# Ensure cabal is initialized for the builder user
+SHELL ["/bin/bash", "-lc"]
+RUN cabal update || true
+
+# Use base image PATH (includes ghc/cabal)

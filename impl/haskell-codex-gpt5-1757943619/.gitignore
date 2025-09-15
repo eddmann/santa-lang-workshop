@@ -1,0 +1,21 @@
+# Haskell build artifacts
+dist/
+dist-newstyle/
+*.hi
+*.o
+*.a
+*.dyn_o
+*.dyn_hi
+
+# Cabal/Stack files
+.stack-work/
+cabal.project.local
+
+# Local tmp for debugging tests
+tmp/
+
+# Editor/OS
+.DS_Store
+*.swp
+*.swo
+
