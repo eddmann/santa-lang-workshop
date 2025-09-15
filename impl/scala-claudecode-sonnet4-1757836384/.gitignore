@@ -1,0 +1,23 @@
+# Scala/SBT
+target/
+project/target/
+project/project/
+.scala-build/
+*.class
+*.jar
+*.war
+*.tasty
+
+# IDE
+.idea/
+.vscode/
+.metals/
+.bloop/
+.bsp/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files for debugging
+/tmp

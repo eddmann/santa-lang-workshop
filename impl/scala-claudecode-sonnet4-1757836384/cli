@@ -1,0 +1,4 @@
+#!/bin/bash
+# CLI entrypoint for local development (Docker uses the jar directly)
+cd "$(dirname "$0")"
+sbt "run $*"

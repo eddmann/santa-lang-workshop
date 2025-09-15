@@ -1,0 +1,32 @@
+FROM openjdk:21-jdk-slim
+
+# Install necessary tools
+RUN apt-get update && apt-get install -y \
+    curl \
+    git \
+    bash \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install SBT
+RUN curl -L -o sbt-1.9.6.deb "https://repo.scala-sbt.org/scalasbt/debian/sbt-1.9.6.deb" \
+    && dpkg -i sbt-1.9.6.deb \
+    && rm sbt-1.9.6.deb
+
+# Create non-root user with home directory
+RUN groupadd -r dev && useradd -r -g dev -m -d /home/dev dev
+RUN mkdir -p /work && chown dev:dev /work
+
+# Set working directory
+WORKDIR /work
+
+# Switch to non-root user
+USER dev
+
+# Pre-warm SBT and Scala (with proper home directory)
+RUN echo 'scalaVersion := "3.7.2"' > /tmp/build.sbt \
+    && cd /tmp \
+    && sbt -batch update \
+    && rm /tmp/build.sbt
+
+# Default shell
+CMD ["/bin/bash"]

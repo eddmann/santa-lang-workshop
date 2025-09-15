@@ -1,0 +1,54 @@
+{
+  "author": "Jolly PatternMatch",
+  "details": {
+    "language": "Scala",
+    "model": "Sonnet 4",
+    "harness": "Claude Code",
+    "requirements": "Scala 3.7.2, Functional"
+  },
+  "progress": {
+    "stage-1": "complete",
+    "stage-2": "complete",
+    "stage-3": "complete",
+    "stage-4": "complete",
+    "stage-5": "complete"
+  },
+  "journal": [
+    {
+      "written_at": "2025-09-14T07:55:40Z",
+      "entry": "Kickoff: Starting elf-lang implementation in Scala. Author set as Jolly PatternMatch. Implementation directory: ./impl/scala-claudecode-sonnet4-1757836384. Initial focus: Setting up Dockerized toolchain. Next command: make -C ./impl/scala-claudecode-sonnet4-1757836384 build-image"
+    },
+    {
+      "written_at": "2025-09-14T07:59:55Z",
+      "entry": "Docker toolchain setup completed successfully. Images built: local/santa-scala-claudecode-sonnet4-1757836384:build and local/santa-scala-claudecode-sonnet4-1757836384:cli. CLI is runnable via: make -C ./impl/scala-claudecode-sonnet4-1757836384 run ARGS='tokens <file>'. Test command works: make -C ./impl/scala-claudecode-sonnet4-1757836384 test-stage-1. Ready to implement Stage 1 lexer."
+    },
+    {
+      "written_at": "2025-09-14T08:02:14Z",
+      "entry": "Stage 1 (Lexing) completed successfully. All 5 tests passing: basic_tokens, operators_and_symbols, keywords_and_identifiers, comments, unary_minus_tokenization. Lexer handles integers, decimals, strings with escapes, keywords, identifiers, operators, and comments. Ready to proceed to Stage 2 (Parsing)."
+    },
+    {
+      "written_at": "2025-09-14T08:09:18Z",
+      "entry": "Stage 2 basic parsing implemented successfully. Completed: literals, variable declarations (let/let mut), arithmetic operations with precedence and parentheses. Fixed JSON key ordering and lexer issues. Next: implement collections (lists, sets, dicts), indexing, if-expressions, and function literals to complete Stage 2. Tests passing: 01_literal_expressions, 02_variable_declarations, 03_basic_operations."
+    },
+    {
+      "written_at": "2025-09-14T08:20:35Z",
+      "entry": "Stage 2 parsing: 8/10 tests passing. Successfully implemented: lists, sets, dictionaries, if expressions, function literals, function calls (basic), and indexing. Remaining: function composition operators (>>, |>) and assignment statements. Function calls work individually but may have issues in complex combinations."
+    },
+    {
+      "written_at": "2025-09-15T11:33:43Z",
+      "entry": "Stage 2 (Parsing) completed successfully. All 10/10 tests passing. Fixed function call parsing to handle operators as identifiers (+ - * / etc.). Implemented function composition operators (>>) and function threading (|>). Added support for assignment statements for mutable variables. Comments are now correctly included in the AST. Parser now handles all required AST nodes: literals, let/let mut, operators, collections (list/set/dict), if-expressions, function literals, function calls, and composition. Ready to proceed to Stage 3 (Basic evaluation)."
+    },
+    {
+      "written_at": "2025-09-15T11:42:14Z",
+      "entry": "Stage 3 (Basic evaluation) partially implemented. Interpreter foundation complete with value types, environment/scope, puts function, arithmetic operations (+, -, *, /), comparisons, logical operators, variable bindings (let/let mut), and basic error handling. Passing tests: 01_puts_function, 02_basic_evaluation, 03_arithmetic_operations, 04_variable_operations (4/11). Remaining work: Fix error message format to include [Error] prefix, implement short-circuit evaluation for && and ||, handle edge cases for string repetition and division by zero. Parser now removes numeric underscores. Main.scala updated to output errors to stdout. Foundation is solid for completing remaining Stage 3 requirements."
+    },
+    {
+      "written_at": "2025-09-15T12:03:45Z",
+      "entry": "Stage 5 mostly complete (8/14 tests passing). Successfully implemented: partial application for functions and built-in operators (+, -, *, /, push), map/filter/fold higher-order functions, function composition (>>), function threading (|>), closures with mutable capture, zero-arg functions (||). Remaining issues: full partial application support for assoc (3-arg function), some error message formatting. Stages 1-4 complete (49/57 total tests passing). Core interpreter functionality solid with proper lexing, parsing, evaluation, collections, and most higher-order features working."
+    },
+    {
+      "written_at": "2025-09-15T12:10:26Z",
+      "entry": "Stage 5 (Higher-order & composition) completed successfully. All 57/57 tests passing. Fixed: assoc partial application (now supports 3-arg partial application), error messages for non-callable values (now properly reports 'Expected a Function, found: Type'), error messages for map/filter/fold type errors (now properly reports 'Unexpected argument'), numeric underscores in AST (preserved in AST output but removed during evaluation). Implementation complete with all 5 stages passing. Docker images working: local/santa-scala-claudecode-sonnet4-1757836384:build and :cli."
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+ARG BUILDER_IMAGE=local/santa-scala-claudecode-sonnet4-1757836384:build
+
+# Build stage
+FROM ${BUILDER_IMAGE} AS builder
+
+WORKDIR /work
+
+# Copy source files
+COPY --chown=dev:dev . .
+
+# Build the application
+RUN sbt assembly
+
+# Runtime stage
+FROM openjdk:21-slim
+
+WORKDIR /app
+
+# Copy the assembled jar from builder stage
+COPY --from=builder /work/target/scala-3*/elf-lang-assembly-*.jar /app/elf-lang.jar
+
+# Set entrypoint
+ENTRYPOINT ["java", "-jar", "/app/elf-lang.jar"]
