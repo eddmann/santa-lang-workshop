@@ -1,0 +1,17 @@
+FROM openjdk:24-jdk-slim
+
+# Create non-root user
+RUN groupadd -r dev && useradd -r -g dev -m dev
+
+# Set working directory
+WORKDIR /work
+
+# Ensure proper ownership
+RUN chown dev:dev /work
+
+USER dev
+
+# Set up build cache directories
+RUN mkdir -p /home/dev/.m2
+
+# The source will be mounted at /work during build

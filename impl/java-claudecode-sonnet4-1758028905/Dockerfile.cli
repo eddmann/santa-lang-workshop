@@ -1,0 +1,23 @@
+ARG BUILDER_IMAGE=local/santa-java-claudecode-sonnet4-1758028905:build
+
+FROM ${BUILDER_IMAGE} AS builder
+
+COPY . /work
+WORKDIR /work
+
+USER root
+RUN chown -R dev:dev /work
+USER dev
+
+# Compile the Java application
+RUN mkdir -p build/classes && find src -name "*.java" -print0 | xargs -0 javac -d build/classes
+
+FROM openjdk:24-slim
+
+COPY --from=builder /work/build/classes /app/classes
+COPY --from=builder /work/cli /app/cli
+
+RUN chmod +x /app/cli
+
+WORKDIR /work
+ENTRYPOINT ["/app/cli"]
